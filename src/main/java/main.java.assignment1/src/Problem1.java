@@ -5,6 +5,8 @@ import java.awt.*;
 
 /**
  * Created by Binod Bhandari on 6/24/18.
+ * Email: bb822@drexel.edu
+ * CS338:GUI, Assignment I
  */
 public class Problem1 {
 
