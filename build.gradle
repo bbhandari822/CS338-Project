@@ -12,7 +12,13 @@ repositories {
     mavenCentral()
 }
 
+
 applicationName = 'swing-project-java'
+mainClassName = 'com.binod.project.swing.ApplicationRunner'
+
+run {
+    main = project.getProperty('mainClassName')
+}
 
 jar {
     baseName = 'swing-project-java'
