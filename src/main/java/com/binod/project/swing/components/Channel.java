@@ -1,14 +1,18 @@
 package com.binod.project.swing.components;
 
 import com.binod.project.swing.user.LoadingPage;
+import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Timer;
 
 /**
  * Created by Binod Bhandari on 8/4/18.
  */
+@Data
 public class Channel {
 
     private JFrame channelFrame;
@@ -20,7 +24,7 @@ public class Channel {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        new Channel().channelForm();
+                        new Channel().channelReturn();
                     }
                 },4900
         );
@@ -29,11 +33,10 @@ public class Channel {
     private void channelForm(){
 
         channelFrame = new JFrame("Channel 1");
-        channelFrame.setSize(600,600);
+        channelFrame.setSize(760,850);
         channelFrame.setLayout(new GridLayout(3, 1));
 
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
 
         channelFrame.setVisible(true);
 
@@ -75,8 +78,14 @@ public class Channel {
 
 
         JMenuItem reload = new JMenuItem("Reload");
+        reload.addActionListener(e -> SwingUtilities.updateComponentTreeUI(channelFrame));
         JMenuItem toggleFullScreen = new JMenuItem("Toggle Full Screen");
         JMenuItem actualSize = new JMenuItem("Actual Size");
+        actualSize.addActionListener(e -> {
+            channelFrame.setPreferredSize(new Dimension(700, 700));
+            channelFrame.pack();
+            channelFrame.setVisible(true);
+        });
         JMenuItem zoomIn = new JMenuItem("Zoom In");
         JMenuItem zoomOut = new JMenuItem("Zoom Out");
 
@@ -94,7 +103,18 @@ public class Channel {
         historyMenu.add(forward);
 
         JMenuItem minimize = new JMenuItem("Minimize");
+        minimize.addActionListener(e -> channelFrame.setState(Frame.ICONIFIED));
+        JMenuItem maximize = new JMenuItem("Maximize");
+        maximize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                channelFrame.setExtendedState(channelFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                channelFrame.pack();
+                channelFrame.setVisible(true);
+            }
+        });
         windowMenu.add(minimize);
+        windowMenu.add(maximize);
 
         JMenuItem keyboardShortcuts = new JMenuItem("Keyboard Shortcuts");
         JMenuItem helpCenter = new JMenuItem("Help Center");
@@ -113,14 +133,19 @@ public class Channel {
         channelMenuBar.add(helpMenu);
 
         channelFrame.setJMenuBar(channelMenuBar);
+        channelFrame.setContentPane(new ChatAreaBox().getChatArea());
         channelFrame.setVisible(true);
 
     }
 
-    public static void main(String[] args) {
-
+    private void channelReturn(){
         Channel channel = new Channel();
         channel.channelForm();
         channel.showMenuBar();
     }
+
+    public static void main(String[] args) {
+        new Channel().channelReturn();
+    }
+
 }
