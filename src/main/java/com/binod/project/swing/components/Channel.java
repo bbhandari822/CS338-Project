@@ -1,5 +1,6 @@
 package com.binod.project.swing.components;
 
+import com.binod.project.swing.chat.Server;
 import com.binod.project.swing.user.LoadingPage;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Timer;
 
 /**
@@ -24,7 +26,11 @@ public class Channel {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        new Channel().channelReturn();
+                        try {
+                            new Channel().channelReturn();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },4900
         );
@@ -33,16 +39,34 @@ public class Channel {
     private void channelForm(){
 
         channelFrame = new JFrame("Channel 1");
-        channelFrame.setSize(760,850);
-        channelFrame.setLayout(new GridLayout(3, 1));
-
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        channelFrame.setSize(820, 850);
 
+//        JPanel panel = new JPanel();
+//        JLabel label = new JLabel("Enter Text");
+//        JTextField tf = new JTextField(10);
+//        JButton send = new JButton("Send");
+//        JButton reset = new JButton("Reset");
+//        panel.add(label);
+//        panel.add(label);
+//        panel.add(tf);
+//        panel.add(send);
+//        panel.add(reset);
+//
+//        JPanel panel1 = new JPanel();
+//        JTextArea ta = new JTextArea();
+//        ta.setColumns(80);
+//        ta.setRows(60);
+//        panel1.add(ta);
+//        channelFrame.getContentPane().add(BorderLayout.SOUTH, panel);
+
+        channelFrame.getContentPane().add(BorderLayout.NORTH, showMenuBar());
+//        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox.ChatPanel().getChatArea());
         channelFrame.setVisible(true);
 
     }
 
-    private void showMenuBar(){
+    private JMenuBar showMenuBar(){
 
         final JMenuBar channelMenuBar = new JMenuBar();
 
@@ -82,7 +106,7 @@ public class Channel {
         JMenuItem toggleFullScreen = new JMenuItem("Toggle Full Screen");
         JMenuItem actualSize = new JMenuItem("Actual Size");
         actualSize.addActionListener(e -> {
-            channelFrame.setPreferredSize(new Dimension(700, 700));
+            channelFrame.setPreferredSize(new Dimension(820, 850));
             channelFrame.pack();
             channelFrame.setVisible(true);
         });
@@ -132,19 +156,18 @@ public class Channel {
         channelMenuBar.add(windowMenu);
         channelMenuBar.add(helpMenu);
 
-        channelFrame.setJMenuBar(channelMenuBar);
-        channelFrame.setContentPane(new ChatAreaBox().getChatArea());
-        channelFrame.setVisible(true);
+        return channelMenuBar;
 
     }
 
-    private void channelReturn(){
+    private void channelReturn() throws IOException{
         Channel channel = new Channel();
         channel.channelForm();
         channel.showMenuBar();
+        new Server().connectToServer();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Channel().channelReturn();
     }
 
