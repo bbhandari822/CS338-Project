@@ -21,6 +21,8 @@ import java.util.Observer;
  */
 public class ChatAreaBox extends Observable{
 
+    private static ChatController chatController;
+
     static class ChatController extends Observable{
         private Socket socket;
         private OutputStream outputStream;
@@ -31,11 +33,9 @@ public class ChatAreaBox extends Observable{
             super.notifyObservers(arg);
         }
 
-        private static final String STRINGFORMAT = "\r\n";
+        private void initSocket() throws IOException {
 
-        private void initSocket(String server, int port) throws IOException {
-
-            socket = new Socket(server, port);
+            socket = new Socket("localhost", 3456);
             outputStream = socket.getOutputStream();
 
             Thread thread = new Thread(() -> {
@@ -52,7 +52,7 @@ public class ChatAreaBox extends Observable{
 
         public void send(String text) {
             try {
-                outputStream.write((text + STRINGFORMAT).getBytes());
+                outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
             } catch (IOException ex) {
                 notifyObservers(ex);
@@ -73,6 +73,7 @@ public class ChatAreaBox extends Observable{
         private JTextField textField;
         private JTextArea chatAreaBox;
         private ChatController chatController;
+        private JPanel chatAreaPanel;
 
         private static String getCurrentDateAndTime() {
             Date dateAndTime = new Date();
@@ -80,15 +81,9 @@ public class ChatAreaBox extends Observable{
             return simpleDateFormat.format(dateAndTime);
         }
 
-        public ChatPanel(ChatController chatController){
-            this.chatController = chatController;
-            chatController.addObserver(this);
-            getChatArea();
-        }
+        private JPanel getChatArea(ChatController chatController) {
 
-        private void getChatArea() {
-
-            JPanel chatAreaPanel = new JPanel();
+            chatAreaPanel = new JPanel();
             chatAreaPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
                     getCurrentDateAndTime() + "------------------------------------------------"));
 
@@ -122,7 +117,7 @@ public class ChatAreaBox extends Observable{
             ActionListener sendActionListener = (ActionEvent e) -> {
                 String messageString = textField.getText();
                 if (messageString.trim().length() > 0) {
-                    chatController.send(messageString);
+                    this.chatController.send(messageString);
                 }
                 textField.selectAll();
                 textField.requestFocus();
@@ -131,6 +126,7 @@ public class ChatAreaBox extends Observable{
             textField.addActionListener(sendActionListener);
             send.addActionListener(sendActionListener);
 
+            return chatAreaPanel;
         }
 
 
@@ -144,4 +140,15 @@ public class ChatAreaBox extends Observable{
         }
     }
 
+    private void takeFrameFromChannel(ChatController chatController) throws IOException {
+        ChatAreaBox.chatController = chatController;
+//        chatController.addObserver((Observer) this);
+        JPanel panel = new ChatAreaBox.ChatPanel().getChatArea(chatController);
+        chatController.initSocket();
+    }
+
+    public JPanel check() throws IOException {
+        new ChatAreaBox.ChatPanel().getChatArea(chatController);
+        return new JPanel();
+    }
 }
