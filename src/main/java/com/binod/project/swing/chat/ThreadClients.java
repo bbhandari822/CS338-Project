@@ -7,110 +7,122 @@ import java.net.Socket;
 import java.util.stream.IntStream;
 
 /**
- * Created by Binod Bhandari on 8/11/18.
+ * Created by Binod Bhandari on 8/4/18.
  */
-public class ThreadClients extends Thread {
 
-    private Socket socketClient;
-    private ThreadClients[] threadClients;
-    private int clientThreadCount;
-    private String clientName;
+public class ThreadClients extends Thread{
+
+    private static String line;
+    private String clientName = null;
     private PrintStream printStream;
-    private static String message;
+    private Socket socketForClient;
+    private ThreadClients[] threads = null;
+    private int clientThreadNumber;
+    private String name;
+
+
+    public ThreadClients(Socket clientSocket, ThreadClients[] threads) {
+        this.socketForClient = clientSocket;
+        this.threads = threads;
+        clientThreadNumber = threads.length;
+    }
 
 
     public void run() {
-        int clientThreadCount = this.clientThreadCount;
-        ThreadClients[] threadClients = this.threadClients;
+        int maxClientsCount = this.clientThreadNumber;
+        ThreadClients[] threads = this.threads;
 
-
-        DataInputStream dataInputStream;
         try {
-            dataInputStream = new DataInputStream(socketClient.getInputStream());
-            printStream = new PrintStream(socketClient.getOutputStream());
-            String name;
-            do {
-                printStream.println("Enter your name");
+            DataInputStream dataInputStream = new DataInputStream(socketForClient.getInputStream());
+            printStream = new PrintStream(socketForClient.getOutputStream());
+            while (true) {
+                printStream.println("Enter your name.");
                 name = dataInputStream.readLine().trim();
-                if (name.indexOf('@') == -1) break;
-                else printStream.println("The name should not contain '@' character.");
-            } while (true);
+                if (name.indexOf('@') == -1) {
+                    break;
+                } else {
+                    printStream.println("The name should not contain '@' character.");
+                }
+            }
 
-            printStream.println(name + ", Welcome to Drexel Chat Room!");
+            printStream.println("Welcome " + name
+                    + " to our chat room.\nTo leave enter /quit in a new line.");
+            System.out.println("Adding this client to active client list " + name);
             synchronized (this) {
-                if (IntStream.range(0, clientThreadCount).anyMatch(i -> threadClients[i] != null && threadClients[i] == this)) {
+                if (IntStream.range(0, maxClientsCount).anyMatch(i -> threads[i] != null && threads[i] == this)) {
                     clientName = "@" + name;
                 }
-            }
+                int j = 0;
+                while (j < maxClientsCount) {
+                    if (threads[j] != null && threads[j] != this) {
+                        threads[j].printStream.println("Let's welcome " + name + " to the chat room !!! ***");
 
-            int j = 0;
-            while (j < clientThreadCount) {
-                if (threadClients[j] != null && threadClients[j] != this) {
-                    threadClients[j].printStream.println("New user " + name + " is added!");
+                    }
+                    j++;
                 }
-                j++;
             }
-
-            while (true){
-                 String message = dataInputStream.readLine();
-                if(message.startsWith(String.valueOf("exit"))){
-                    printStream.println("Sad seeing you leave " + name);
+            while (true) {
+                line = dataInputStream.readLine();
+                if (line.startsWith("exit")) {
                     break;
                 }
-                 if(message.startsWith("@")){
-                     String[] messageFirstWord = message.split("\\s", 2);
-                     if(messageFirstWord[1] != null){
-                         if(messageFirstWord[1].trim().isEmpty()){
-                             continue;
-                         }
-                         synchronized (this) {
-                             int i = 0;
-                             while (i < clientThreadCount) {
-                                 if (threadClients[i] != null && threadClients[i] != this
-                                         && threadClients[i].clientName.equals(messageFirstWord[0]) && threadClients[i].clientName != null) {
-                                     threadClients[i].printStream.println("<<" + name + ">> " + messageFirstWord[1]);
-                                     this.printStream.println(">>" + name + ">> " + messageFirstWord[1]);
-                                     break;
-                                 }
-                                 i++;
-                             }
-                         }
-                     }
-                 } else{
-                     synchronized (this) {
-                         String finalName = name;
-                         IntStream.range(0, clientThreadCount).filter(i -> threadClients[i] != null && threadClients[i].clientName != null)
-                                 .forEach(i -> threadClients[i].printStream.println("<" + finalName + "> " + message));
-                     }
-                 }
-            }
-            synchronized (this) {
-                String finalName1 = name;
-                IntStream.range(0, clientThreadCount).filter(i -> threadClients[i] != null && threadClients[i] != this
-                        && threadClients[i].clientName != null).forEach(i -> threadClients[i].printStream
-                        .println(">>>> User " + finalName1 + " is leaving the Drexel chat room !!!"));
-            }
 
-            synchronized (this) {
-                for (int i = 0; i < 20; i++) {
-                    if (threadClients[i] == this) {
-                        threadClients[i] = null;
+                if (line.startsWith("@")) {
+                    String[] words = line.split("\\s", 2);
+                    if (words[1] != null) {
+                        if (words[1].trim().isEmpty()) {
+                            continue;
+                        }
+                        synchronized (this) {
+                            int i = 0;
+                            while (i < maxClientsCount) {
+                                if (threads[i] != null && threads[i] != this
+                                        && threads[i].clientName != null
+                                        && threads[i].clientName.equals(words[0])) {
+                                    threads[i].printStream.println("<" + name + "> " + words[1]);
+                                    this.printStream.println(">" + name + "> " + words[1]);
+                                    break;
+                                }
+                                i++;
+                            }
+                        }
+                    }
+                }
+                else {
+                    /* The message dataInputStream public, broadcast it to all other clients. */
+                    synchronized (this) {
+                        IntStream.range(0, maxClientsCount).filter(i -> threads[i] != null && threads[i].clientName != null)
+                                .forEach(i -> threads[i].printStream.println("<" + name + "> " + line));
                     }
                 }
             }
+            synchronized (this) {
+                IntStream.range(0, maxClientsCount).filter(i -> threads[i] != null && threads[i] != this
+                        && threads[i].clientName != null).forEach(i -> threads[i].printStream.println(" <<< The user " + name
+                        + " is leaving the chat room !!! >>>"));
+            }
+            printStream.println(">>>>>>> Sad seeing you leave " + name + " >>>>>>>");
 
-            printStream.close();
+            /*
+             * Clean up. Set the current thread variable to null so that a new client
+             * could be accepted by the server.
+             */
+
+            synchronized (this) {
+                for (int i = 0; i < maxClientsCount; i++) {
+                    if (threads[i] == this) {
+                        threads[i] = null;
+                    }
+                }
+            }
+            /*
+             * Close the output stream, close the input stream, close the socket.
+             */
             dataInputStream.close();
-            socketClient.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            printStream.close();
+            socketForClient.close();
+        } catch (IOException ignored) {
         }
     }
-
-    public ThreadClients(Socket clientSocket, ThreadClients[] threads) {
-        this.socketClient = clientSocket;
-        this.threadClients = threads;
-        clientThreadCount = threads.length;
-
-    }
 }
+

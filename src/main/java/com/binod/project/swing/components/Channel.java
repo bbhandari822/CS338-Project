@@ -40,7 +40,9 @@ public class Channel {
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         channelFrame.setSize(820, 850);
         channelFrame.getContentPane().add(BorderLayout.NORTH, new FrameMenuBar().showMenuBar(channelFrame));
-        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check());
+        channelFrame.getContentPane().add(BorderLayout.BEFORE_LINE_BEGINS, new ChannelInformationMenu().createToolBars());
+        channelFrame.getContentPane().add(BorderLayout.AFTER_LINE_ENDS, new ChannelInformationMenu().createToolBars());
+        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController()));
         channelFrame.setVisible(true);
 
     }
@@ -48,11 +50,10 @@ public class Channel {
     private void channelReturn() throws IOException{
         Channel channel = new Channel();
         channel.channelForm();
-        new Server().connectToServer();
     }
 
     public static void main(String[] args) throws IOException {
-        new Channel().channelReturn();
+        new Channel().channelForm();
     }
 
 }

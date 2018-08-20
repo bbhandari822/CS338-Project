@@ -35,7 +35,6 @@ public class LogIn {
     private static JPanel logInPanel(){
 
         JPanel panel = new JPanel(new GridLayout(2, 1));
-
         JPanel labelPanel = new JPanel(new GridLayout(2, 1));
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
@@ -85,7 +84,6 @@ public class LogIn {
 
         return panel;
     }
-
 
     private String getUsername() {
         return usernameTextField.getText().trim();

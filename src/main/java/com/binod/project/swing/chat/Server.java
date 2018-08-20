@@ -17,10 +17,9 @@ public class Server {
 
         ServerSocket serverSocket = new ServerSocket(3456);
 
-        while (true) {
+        do {
             try {
                 Socket clientSocket = serverSocket.accept();
-
                 int i = 0;
                 for (i = 0; i < 20; i++) {
                     if (threads[i] == null) {
@@ -31,6 +30,10 @@ public class Server {
             } catch (IOException e) {
                 System.out.print(e.toString());
             }
-        }
+        } while (true);
+    }
+
+    public static void main(String[] args) throws IOException {
+        new Server().connectToServer();
     }
 }

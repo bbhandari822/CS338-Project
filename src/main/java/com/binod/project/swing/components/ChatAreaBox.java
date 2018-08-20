@@ -19,9 +19,7 @@ import java.util.Observer;
 /**
  * Created by Binod Bhandari on 8/3/18.
  */
-public class ChatAreaBox extends Observable{
-
-    private static ChatController chatController;
+public class ChatAreaBox {
 
     static class ChatController extends Observable{
         private Socket socket;
@@ -33,7 +31,7 @@ public class ChatAreaBox extends Observable{
             super.notifyObservers(arg);
         }
 
-        private void initSocket() throws IOException {
+        public void initSocket() throws IOException {
 
             socket = new Socket("localhost", 3456);
             outputStream = socket.getOutputStream();
@@ -50,7 +48,8 @@ public class ChatAreaBox extends Observable{
             thread.start();
         }
 
-        public void send(String text) {
+        public void send(String text) throws IOException {
+            initSocket();
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
@@ -81,7 +80,7 @@ public class ChatAreaBox extends Observable{
             return simpleDateFormat.format(dateAndTime);
         }
 
-        private JPanel getChatArea(ChatController chatController) {
+        private JPanel getChatArea(ChatController chatController) throws IOException {
 
             chatAreaPanel = new JPanel();
             chatAreaPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
@@ -106,6 +105,7 @@ public class ChatAreaBox extends Observable{
                     chatAreaBox.append(text + "\n");
                     textField.selectAll();
                     chatAreaBox.setCaretPosition(chatAreaBox.getDocument().getLength());
+                    textField.setText("");
                 }
             });
             gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -117,15 +117,17 @@ public class ChatAreaBox extends Observable{
             ActionListener sendActionListener = (ActionEvent e) -> {
                 String messageString = textField.getText();
                 if (messageString.trim().length() > 0) {
-                    this.chatController.send(messageString);
+                    try {
+                        chatController.send(messageString);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
                 textField.selectAll();
                 textField.requestFocus();
-                textField.setText("");
             };
             textField.addActionListener(sendActionListener);
             send.addActionListener(sendActionListener);
-
             return chatAreaPanel;
         }
 
@@ -140,15 +142,10 @@ public class ChatAreaBox extends Observable{
         }
     }
 
-    private void takeFrameFromChannel(ChatController chatController) throws IOException {
-        ChatAreaBox.chatController = chatController;
-//        chatController.addObserver((Observer) this);
-        JPanel panel = new ChatAreaBox.ChatPanel().getChatArea(chatController);
-        chatController.initSocket();
+    public JPanel check(ChatController chatController) throws IOException {
+//        JPanel chat = new ChatPanel().getChatArea(chatController);
+        JPanel chat = new ChatPanel().getChatArea(chatController);
+        return chat;
     }
 
-    public JPanel check() throws IOException {
-        new ChatAreaBox.ChatPanel().getChatArea(chatController);
-        return new JPanel();
-    }
 }

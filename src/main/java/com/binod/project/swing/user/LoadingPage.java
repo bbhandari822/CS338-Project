@@ -15,7 +15,7 @@ public class LoadingPage {
         ImageIcon loading = new ImageIcon("src/main/java/com/binod/project/swing/pictures/loading.gif");
         loadingFrame.add(new JLabel(loading, JLabel.CENTER));
         loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        loadingFrame.setSize(500, 500);
+        loadingFrame.setSize(550, 550);
         loadingFrame.setVisible(true);
         java.util.Timer timer = new Timer();
         timer.schedule(
