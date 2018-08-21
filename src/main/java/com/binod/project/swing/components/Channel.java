@@ -1,6 +1,5 @@
 package com.binod.project.swing.components;
 
-import com.binod.project.swing.chat.Server;
 import com.binod.project.swing.user.LoadingPage;
 import lombok.Data;
 
@@ -38,10 +37,10 @@ public class Channel {
 
         channelFrame = new JFrame("Channel 1");
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        channelFrame.setSize(820, 850);
-        channelFrame.getContentPane().add(BorderLayout.NORTH, new FrameMenuBar().showMenuBar(channelFrame));
+        channelFrame.setSize(950, 880);
+        channelFrame.setJMenuBar(new FrameMenuBar().showMenuBar(channelFrame));
+        channelFrame.getContentPane().add(new ChannelInformationMenu().createToolBars(), BorderLayout.NORTH);
         channelFrame.getContentPane().add(BorderLayout.BEFORE_LINE_BEGINS, new ChannelInformationMenu().createToolBars());
-        channelFrame.getContentPane().add(BorderLayout.AFTER_LINE_ENDS, new ChannelInformationMenu().createToolBars());
         channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController()));
         channelFrame.setVisible(true);
 

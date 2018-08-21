@@ -49,7 +49,7 @@ public class LogIn {
         textPanel.add(usernameTextField);
         textPanel.add(passwordTextField);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
+        JPanel buttonPanel = new JPanel();
         JButton login = new JButton("Log In");
 
         login.addActionListener(e -> {

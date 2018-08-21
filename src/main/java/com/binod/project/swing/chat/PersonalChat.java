@@ -53,6 +53,7 @@ public class PersonalChat {
         }
 
         public void send(String text) throws IOException {
+            initSocket();
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
@@ -77,9 +78,9 @@ public class PersonalChat {
         private JButton sendButton;
         private ChatController chatController;
 
-        public ChatFrame(ChatController chatController) {
-            this.chatController = chatController;
-            chatController.addObserver(this);
+        public ChatFrame(ChatController chatAccess) {
+            this.chatController = chatAccess;
+            chatAccess.addObserver(this);
             buildGUI();
         }
 
@@ -116,12 +117,12 @@ public class PersonalChat {
             inputTextField.addActionListener(sendListener);
             sendButton.addActionListener(sendListener);
 
-//            this.addWindowListener(new WindowAdapter() {
-//                @Override
-//                public void windowClosing(WindowEvent e) {
-//                    chatController.close();
-//                }
-//            });
+            this.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    chatController.close();
+                }
+            });
         }
 
 

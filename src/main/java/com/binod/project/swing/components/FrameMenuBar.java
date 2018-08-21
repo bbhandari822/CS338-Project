@@ -11,12 +11,12 @@ import java.awt.event.ActionListener;
 public class FrameMenuBar {
 
     private JFrame channelFrame;
-    public Component showMenuBar(JFrame channelFrame) {
+    public JMenuBar showMenuBar(JFrame channelFrame) {
         this.channelFrame = channelFrame;
         return showMenuBar();
     }
 
-    private JMenuBar showMenuBar(){
+    public JMenuBar showMenuBar(){
 
         final JMenuBar channelMenuBar = new JMenuBar();
 
@@ -56,7 +56,7 @@ public class FrameMenuBar {
         JMenuItem toggleFullScreen = new JMenuItem("Toggle Full Screen");
         JMenuItem actualSize = new JMenuItem("Actual Size");
         actualSize.addActionListener(e -> {
-            channelFrame.setPreferredSize(new Dimension(820, 850));
+            channelFrame.setPreferredSize(new Dimension(1120, 850));
             channelFrame.pack();
             channelFrame.setVisible(true);
         });

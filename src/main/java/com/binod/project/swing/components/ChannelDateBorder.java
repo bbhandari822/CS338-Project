@@ -19,8 +19,9 @@ public class ChannelDateBorder {
 
     public JPanel dateTopofChannel(){
         JPanel dateAboveChannelPanel = new JPanel();
-        dateAboveChannelPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
-                currentDateAndTime() + "------------------------------------------------"));
+        dateAboveChannelPanel.setBorder(new TitledBorder(new EtchedBorder(), "---------------------------" +
+                "---------------------------------------" +
+                currentDateAndTime() + "----------------------------------------------------------"));
 
         return dateAboveChannelPanel;
     }

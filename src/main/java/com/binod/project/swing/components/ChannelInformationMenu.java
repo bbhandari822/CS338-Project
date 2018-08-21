@@ -27,17 +27,28 @@ public class ChannelInformationMenu extends JFrame {
 
         JToolBar submenu = new JToolBar();
 
-        ImageIcon newIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/info.jpg");
-        ImageIcon openIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/save.jpg");
-        ImageIcon saveIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/thumb.jpg");
+        ImageIcon starIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/star.jpg");
+        ImageIcon peopleIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/peopleIcon.jpg");
+        ImageIcon thumbIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/thumb.jpg");
 
-        JButton newBtn = new JButton(newIcon);
-        JButton openBtn = new JButton(openIcon);
-        JButton saveBtn = new JButton(saveIcon);
+        ImageIcon phoneIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/phone.jpg");
+        ImageIcon infoIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/info.jpg");
+        ImageIcon settingIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/setting.jpg");
 
-        submenu.add(newBtn);
-        submenu.add(openBtn);
-        submenu.add(saveBtn);
+        JButton starButton = new JButton(starIcon);
+        JButton peopleButton = new JButton(peopleIcon);
+        JButton thumbButton = new JButton(thumbIcon);
+
+        JButton phoneButton = new JButton(phoneIcon);
+        JButton infoButton = new JButton(infoIcon);
+        JButton settingButton = new JButton(settingIcon);
+
+        submenu.add(starButton);
+        submenu.add(peopleButton);
+        submenu.add(thumbButton);
+        submenu.add(phoneButton);
+        submenu.add(infoButton);
+        submenu.add(settingButton);
 
         createLayout(submenu);
         return submenu;

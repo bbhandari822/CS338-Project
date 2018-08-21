@@ -144,8 +144,7 @@ public class ChatAreaBox {
 
     public JPanel check(ChatController chatController) throws IOException {
 //        JPanel chat = new ChatPanel().getChatArea(chatController);
-        JPanel chat = new ChatPanel().getChatArea(chatController);
-        return chat;
+        return new ChatPanel().getChatArea(chatController);
     }
 
 }
