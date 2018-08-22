@@ -1,7 +1,5 @@
 package com.binod.project.swing.components;
 
-import com.binod.project.swing.user.LoginForm;
-
 import javax.swing.*;
 import java.awt.*;
 

@@ -16,44 +16,90 @@ public class LogIn {
     private static JFrame loginFrame;
     private static JFrame logInSuccessMessageBox;
 
+    private JPanel getHeader() {
 
-    public void loginVerification(){
-
-        loginFrame = new JFrame("LogIn");
-        loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JPanel mainloginPanel = new JPanel();
-        mainloginPanel.add(logInPanel());
-        mainloginPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-        loginFrame.add(mainloginPanel);
-        loginFrame.getContentPane();
-        loginFrame.setSize(600,600);
-        loginFrame.pack();
-        loginFrame.setVisible(true);
-
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.setBackground(Color.WHITE);
+        JLabel title = new JLabel("Drexel Chat Room");
+        title.setBorder(BorderFactory.createEmptyBorder(20, 5, 20, 5));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.PLAIN, 20));
+        header.add(title);
+        return header;
     }
 
-    private static JPanel logInPanel(){
+    private JPanel getLoginBox() {
+        JPanel loginBox = new JPanel(new GridBagLayout());
+        loginBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        GridBagConstraints con = new GridBagConstraints();
+        loginBox.setPreferredSize(new Dimension(400,250));
+        loginBox.setBackground(Color.WHITE);
 
-        JPanel panel = new JPanel(new GridLayout(2, 1));
-        JPanel labelPanel = new JPanel(new GridLayout(2, 1));
-        JLabel usernameLabel = new JLabel("Username");
-        JLabel passwordLabel = new JLabel("Password");
+        JLabel signInLabel = new JLabel("Sign in to your chat room");
+        signInLabel.setBorder(BorderFactory.createEmptyBorder(0, 100, 20, 30));
+        signInLabel.setFont(new Font("Arial", Font.BOLD, 17));
 
-        labelPanel.add(usernameLabel, BorderLayout.NORTH);
-        labelPanel.add(passwordLabel, BorderLayout.SOUTH);
+        JLabel enterYourCredentialLabel = new JLabel("Enter your credentials");
+        enterYourCredentialLabel.setBorder(BorderFactory.createEmptyBorder(0, 120, 20, 30));
+        enterYourCredentialLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        con.gridx = 0;
+        con.gridy = 0;
+        con.ipady = 10;
+        con.fill = GridBagConstraints.HORIZONTAL;
+        con.gridwidth = 2;
+        con.weightx = 1;
+        con.anchor = GridBagConstraints.CENTER;
+        loginBox.add(signInLabel, con);
+        con.gridy++;
+        loginBox.add(enterYourCredentialLabel, con);
 
-        JPanel textPanel = new JPanel(new GridLayout(2, 1));
-        usernameTextField = new JTextField();
-        passwordTextField = new JPasswordField();
+        con.ipady = 0;
+        con.gridy++;
+        con.gridx = 0;
+        con.gridwidth = 1;
+        con.weightx = 0.3;
+        con.anchor = GridBagConstraints.PAGE_START;
+        loginBox.add(new JLabel("Username"), con);
+        con.gridy++;
+        loginBox.add(new JLabel("Password"), con);
 
-        textPanel.add(usernameTextField);
-        textPanel.add(passwordTextField);
+        JTextField usernameTextField = new JTextField();
+        JPasswordField passwordTextField = new JPasswordField();
+        con.gridy = 2;
+        con.gridx = 1;
+        con.weightx = 0.7;
+        loginBox.add(usernameTextField, con);
 
-        JPanel buttonPanel = new JPanel();
-        JButton login = new JButton("Log In");
+        con.gridy++;
+        loginBox.add(passwordTextField, con);
 
-        login.addActionListener(e -> {
-            if(new LogIn().getUsername().equals("D") && new LogIn().getPassword().equals("H")){
+        con.ipady = 5;
+        con.gridy++;
+        con.gridx = 0;
+        con.gridwidth = 2;
+        con.weightx = 1;
+        con.weighty = 0.3;
+        con.anchor = GridBagConstraints.CENTER;
+        JLabel login = new JLabel("<html>Don't have an account? <a href='#'>Sign Up</a></html>");
+        loginBox.add(login, con);
+
+        con.gridy++;
+        con.gridx = 0;
+        con.gridwidth = 1;
+        con.weightx = 0.5;
+        con.weighty = 0.7;
+        con.anchor = GridBagConstraints.PAGE_END;
+        //con.ipady = 10;
+        JButton cancelButton = new JButton("Cancel");
+        loginBox.add(cancelButton, con);
+
+        con.gridx++;
+        JButton loginButton = new JButton("Login");
+        loginBox.add(loginButton, con);
+
+        loginButton.addActionListener(e -> {
+            if(usernameTextField.getText().equals("D") && passwordTextField.getText().equals("H")){
                 JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
                 loginFrame.dispose();
                 new Channel().loadGifAndOpenChannel();
@@ -66,31 +112,35 @@ public class LogIn {
             }
         });
 
-
-        JButton signup = new JButton("Sign Up");
-
-        JButton cancel = new JButton("Cancel");
-        cancel.addActionListener(e -> System.exit(0));
-        buttonPanel.add(login);
-        buttonPanel.add(signup);
-        buttonPanel.add(cancel);
-        buttonPanel.add(Box.createHorizontalGlue());
-
-        panel.add(labelPanel, Component.LEFT_ALIGNMENT);
-        panel.add(textPanel,Component.RIGHT_ALIGNMENT);
-        panel.add(buttonPanel, BorderLayout.PAGE_END);
-
-        panel.add(Box.createHorizontalGlue());
-
-        return panel;
+        return loginBox;
     }
+    public LogIn(Container container) {
 
-    private String getUsername() {
-        return usernameTextField.getText().trim();
+        container.setLayout(new GridBagLayout());
+        GridBagConstraints con = new GridBagConstraints();
+        con.anchor = GridBagConstraints.FIRST_LINE_START;
+        con.gridx = 0;
+        con.weightx = 1;
+        con.gridy = 0;
+        con.weighty = 0.5;
+        con.gridwidth = 3;
+        con.fill = GridBagConstraints.HORIZONTAL;
+        container.add(getHeader(), con);
+        con.anchor = GridBagConstraints.CENTER;
+        con.gridx++;
+        con.gridy++;
+        con.weightx = 1;
+        con.weighty = 0.5;
+        con.anchor = GridBagConstraints.PAGE_START;
+        con.fill = GridBagConstraints.NONE;
+        container.add(getLoginBox(), con);
     }
-
-    private String getPassword() {
-        return passwordTextField.getText().trim();
+    public static void main(String... args) {
+        loginFrame = new JFrame("Login Window");
+        LogIn form = new LogIn(loginFrame.getContentPane());
+        loginFrame.setSize(600, 480);
+        loginFrame.setVisible(true);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }

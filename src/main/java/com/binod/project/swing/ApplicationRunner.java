@@ -8,9 +8,7 @@ import com.binod.project.swing.user.LogIn;
 public class ApplicationRunner {
 
     public static void main(String[] args) {
-
-        LogIn logIn = new LogIn();
-        logIn.loginVerification();
+        LogIn.main();
 
     }
 }
