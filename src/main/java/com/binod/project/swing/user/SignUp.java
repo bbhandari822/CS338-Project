@@ -1,24 +1,22 @@
 package com.binod.project.swing.user;
 
-import com.binod.project.swing.components.Channel;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 /**
  * Created by Binod Bhandari on 7/30/18.
  */
 
-public class LogIn {
+import com.binod.project.swing.components.Channel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+
+
+public class SignUp {
 
     private static JTextField usernameTextField;
     private static JTextField passwordTextField;
-    private static JFrame loginFrame;
-    private static JFrame logInSuccessMessageBox;
+    private static JFrame signUpFrame;
+    private static JFrame SignUpSuccessMessageBox;
 
     private JPanel getHeader() {
 
@@ -34,18 +32,18 @@ public class LogIn {
     }
 
     private JPanel getLoginBox() {
-        JPanel loginBox = new JPanel(new GridBagLayout());
-        loginBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        JPanel signUpBox = new JPanel(new GridBagLayout());
+        signUpBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridBagConstraints con = new GridBagConstraints();
-        loginBox.setPreferredSize(new Dimension(400,250));
-        loginBox.setBackground(Color.WHITE);
+        signUpBox.setPreferredSize(new Dimension(500,400));
+        signUpBox.setBackground(Color.WHITE);
 
-        JLabel signInLabel = new JLabel("Sign in to your chat room");
-        signInLabel.setBorder(BorderFactory.createEmptyBorder(0, 100, 20, 30));
+        JLabel signInLabel = new JLabel("Sign up to your chat room");
+        signInLabel.setBorder(BorderFactory.createEmptyBorder(0, 100, 20, 40));
         signInLabel.setFont(new Font("Arial", Font.BOLD, 17));
 
-        JLabel enterYourCredentialLabel = new JLabel("Enter your credentials");
-        enterYourCredentialLabel.setBorder(BorderFactory.createEmptyBorder(0, 120, 20, 30));
+        JLabel enterYourCredentialLabel = new JLabel("Enter your information");
+        enterYourCredentialLabel.setBorder(BorderFactory.createEmptyBorder(0, 120, 20, 40));
         enterYourCredentialLabel.setFont(new Font("Arial", Font.BOLD, 15));
         con.gridx = 0;
         con.gridy = 0;
@@ -54,9 +52,9 @@ public class LogIn {
         con.gridwidth = 2;
         con.weightx = 1;
         con.anchor = GridBagConstraints.CENTER;
-        loginBox.add(signInLabel, con);
+        signUpBox.add(signInLabel, con);
         con.gridy++;
-        loginBox.add(enterYourCredentialLabel, con);
+        signUpBox.add(enterYourCredentialLabel, con);
 
         con.ipady = 0;
         con.gridy++;
@@ -64,19 +62,38 @@ public class LogIn {
         con.gridwidth = 1;
         con.weightx = 0.3;
         con.anchor = GridBagConstraints.PAGE_START;
-        loginBox.add(new JLabel("Username"), con);
+        signUpBox.add(new JLabel("Username"), con);
         con.gridy++;
-        loginBox.add(new JLabel("Password"), con);
+        signUpBox.add(new JLabel("Password"), con);
+        con.gridy++;
+        signUpBox.add(new JLabel("Re-Enter Password"), con);
+        con.gridy++;
+        signUpBox.add(new JLabel("Email"), con);
+        con.gridy++;
+        signUpBox.add(new JLabel(("Phone Number")), con);
 
         JTextField usernameTextField = new JTextField();
         JPasswordField passwordTextField = new JPasswordField();
+        JPasswordField reEnterPasswordTextField = new JPasswordField();
+        JTextField emailTextField = new JTextField();
+        JTextField phoneNumberTextField = new JTextField();
+
         con.gridy = 2;
         con.gridx = 1;
         con.weightx = 0.7;
-        loginBox.add(usernameTextField, con);
+        signUpBox.add(usernameTextField, con);
 
         con.gridy++;
-        loginBox.add(passwordTextField, con);
+        signUpBox.add(passwordTextField, con);
+
+        con.gridy++;
+        signUpBox.add(reEnterPasswordTextField, con);
+
+        con.gridy++;
+        signUpBox.add(emailTextField, con);
+
+        con.gridy++;
+        signUpBox.add(phoneNumberTextField, con);
 
         con.ipady = 5;
         con.gridy++;
@@ -85,16 +102,8 @@ public class LogIn {
         con.weightx = 1;
         con.weighty = 0.3;
         con.anchor = GridBagConstraints.CENTER;
-        JLabel login = new JLabel("<html>Don't have an account? <a href='#'>Sign Up</a></html>");
-        login.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                loginFrame.dispose();
-                SignUp.main();
-            }
-        });
-
-        loginBox.add(login, con);
+        JLabel signup = new JLabel("<html>Don't have an account? <a href='#'>Sign Up</a></html>");
+//        signUpBox.add(signup, con);
 
         con.gridy++;
         con.gridx = 0;
@@ -102,32 +111,24 @@ public class LogIn {
         con.weightx = 0.5;
         con.weighty = 0.7;
         con.anchor = GridBagConstraints.PAGE_END;
-        //con.ipady = 10;
         JButton cancelButton = new JButton("Cancel");
-        loginBox.add(cancelButton, con);
+        signUpBox.add(cancelButton, con);
 
         con.gridx++;
-        JButton loginButton = new JButton("Login");
-        loginBox.add(loginButton, con);
+        JButton signUpButton = new JButton("Sign Up");
+        signUpBox.add(signUpButton, con);
 
-        loginButton.addActionListener(e -> {
-            if(usernameTextField.getText().equals("D") && passwordTextField.getText().equals("H")){
-                JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
-                loginFrame.dispose();
-                new Channel().loadGifAndOpenChannel();
-            }else if(usernameTextField.getText().equals("") || passwordTextField.getText().equals("")){
-                JOptionPane.showMessageDialog (null, "Please fill out all the information!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog (null, "Username or Password does not match!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        cancelButton.addActionListener(e -> System.exit(0));
+
+        signUpButton.addActionListener(e -> {
+            if(!passwordTextField.getText().equals(reEnterPasswordTextField.getText())){
+                JOptionPane.showMessageDialog(SignUpSuccessMessageBox, "Sorry password does not match");
             }
         });
 
-        cancelButton.addActionListener(e -> System.exit(0));
-        return loginBox;
+        return signUpBox;
     }
-    public LogIn(Container container) {
+    public SignUp(Container container) {
 
         container.setLayout(new GridBagLayout());
         GridBagConstraints con = new GridBagConstraints();
@@ -148,12 +149,13 @@ public class LogIn {
         con.fill = GridBagConstraints.NONE;
         container.add(getLoginBox(), con);
     }
+
     public static void main(String... args) {
-        loginFrame = new JFrame("Login Window");
-        LogIn form = new LogIn(loginFrame.getContentPane());
-        loginFrame.setSize(600, 480);
-        loginFrame.setVisible(true);
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        signUpFrame = new JFrame("Sign Up Window");
+        SignUp form = new SignUp(signUpFrame.getContentPane());
+        signUpFrame.setSize(600, 480);
+        signUpFrame.setVisible(true);
+        signUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }
