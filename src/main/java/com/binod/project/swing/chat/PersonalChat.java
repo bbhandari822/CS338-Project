@@ -88,7 +88,6 @@ public class PersonalChat {
             box.add(inputTextField);
             box.add(sendButton);
 
-            // Action for the inputTextField and the goButton
             ActionListener sendListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String str = inputTextField.getText();

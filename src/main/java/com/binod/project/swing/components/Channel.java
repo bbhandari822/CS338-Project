@@ -1,11 +1,13 @@
 package com.binod.project.swing.components;
 
+import com.binod.project.swing.chat.ThreadClients;
 import com.binod.project.swing.user.LoadingPage;
 import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Timer;
 
 /**
@@ -14,7 +16,10 @@ import java.util.Timer;
 @Data
 public class Channel {
 
+    private static Socket socket;
     private JFrame channelFrame;
+    private static final ThreadClients[] threads = new ThreadClients[20];
+
 
     public void loadGifAndOpenChannel(){
         new LoadingPage().loading();
@@ -41,7 +46,7 @@ public class Channel {
         channelFrame.setJMenuBar(new FrameMenuBar().showMenuBar(channelFrame));
         channelFrame.getContentPane().add(new ChannelInformationMenu().createToolBars(), BorderLayout.NORTH);
         channelFrame.getContentPane().add(BorderLayout.BEFORE_LINE_BEGINS, new ChannelInformationMenu().createToolBars());
-        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController()));
+        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController(), socket));
         channelFrame.setVisible(true);
 
     }
@@ -52,6 +57,7 @@ public class Channel {
     }
 
     public static void main(String[] args) throws IOException {
+        socket = new Socket("localhost", 3456);
         new Channel().channelForm();
     }
 

@@ -19,6 +19,7 @@ public class ThreadClients extends Thread{
     private ThreadClients[] threads = null;
     private int clientThreadNumber;
     private String name;
+    private DataInputStream dataInputStream;
 
 
     public ThreadClients(Socket clientSocket, ThreadClients[] threads) {
@@ -30,10 +31,10 @@ public class ThreadClients extends Thread{
 
     public void run() {
         int maxClientsCount = this.clientThreadNumber;
-        ThreadClients[] threads = this.threads;
+        //ThreadClients[] threads = this.threads;
 
         try {
-            DataInputStream dataInputStream = new DataInputStream(socketForClient.getInputStream());
+            dataInputStream = new DataInputStream(socketForClient.getInputStream());
             printStream = new PrintStream(socketForClient.getOutputStream());
             while (true) {
                 printStream.println("Enter your name.");
@@ -45,8 +46,7 @@ public class ThreadClients extends Thread{
                 }
             }
 
-            printStream.println("Welcome " + name
-                    + " to our chat room.\nTo leave enter /quit in a new line.");
+            printStream.println("Welcome " + name + " to our chat room.\nTo leave enter exit.");
             System.out.println("Adding this client to active client list " + name);
             synchronized (this) {
                 if (IntStream.range(0, maxClientsCount).anyMatch(i -> threads[i] != null && threads[i] == this)) {
@@ -55,7 +55,7 @@ public class ThreadClients extends Thread{
                 int j = 0;
                 while (j < maxClientsCount) {
                     if (threads[j] != null && threads[j] != this) {
-                        threads[j].printStream.println("Let's welcome " + name + " to the chat room !!! ***");
+                        threads[j].printStream.println("Let's welcome " + name + " to the chat room !!!");
 
                     }
                     j++;
@@ -89,7 +89,6 @@ public class ThreadClients extends Thread{
                     }
                 }
                 else {
-                    /* The message dataInputStream public, broadcast it to all other clients. */
                     synchronized (this) {
                         IntStream.range(0, maxClientsCount).filter(i -> threads[i] != null && threads[i].clientName != null)
                                 .forEach(i -> threads[i].printStream.println("<" + name + "> " + line));

@@ -4,8 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,9 +30,9 @@ public class ChatAreaBox {
             super.notifyObservers(arg);
         }
 
-        public void initSocket() throws IOException {
+        public void initSocket(Socket _socket) throws IOException {
 
-            socket = new Socket("localhost", 3456);
+            socket = _socket;
             outputStream = socket.getOutputStream();
 
             Thread thread = new Thread(() -> {
@@ -48,8 +47,8 @@ public class ChatAreaBox {
             thread.start();
         }
 
-        public void send(String text) throws IOException {
-            initSocket();
+        public void send(String text, Socket socket) throws IOException {
+            initSocket(socket);
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
@@ -74,13 +73,19 @@ public class ChatAreaBox {
         private ChatController chatController;
         private JPanel chatAreaPanel;
 
+        public ChatPanel(ChatController chatController, Socket socket) throws IOException {
+            this.chatController = chatController ;
+            chatController.addObserver(this);
+            getChatArea(chatController,socket);
+        }
+
         private static String getCurrentDateAndTime() {
             Date dateAndTime = new Date();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E yyyy.MM.dd hh:mm:ss a");
             return simpleDateFormat.format(dateAndTime);
         }
 
-        private JPanel getChatArea(ChatController chatController) throws IOException {
+        public JPanel getChatArea(ChatController chatController, Socket socket) throws IOException {
 
             chatAreaPanel = new JPanel();
             chatAreaPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
@@ -118,7 +123,7 @@ public class ChatAreaBox {
                 String messageString = textField.getText();
                 if (messageString.trim().length() > 0) {
                     try {
-                        chatController.send(messageString);
+                        chatController.send(messageString, socket);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -128,6 +133,18 @@ public class ChatAreaBox {
             };
             textField.addActionListener(sendActionListener);
             send.addActionListener(sendActionListener);
+            Component component = chatAreaPanel;
+            while (component != null && ! (component instanceof Window))
+                component = component.getParent();
+            if (component != null) {
+                ((Window) component).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        chatController.close();
+                    }
+                });
+            }
+
             return chatAreaPanel;
         }
 
@@ -144,9 +161,8 @@ public class ChatAreaBox {
         }
     }
 
-    public JPanel check(ChatController chatController) throws IOException {
-        JPanel chat = new ChatPanel().getChatArea(chatController);
-//        return new ChatPanel().getChatArea(chatController);
+    public JPanel check(ChatController chatController, Socket socket) throws IOException {
+        JPanel chat = new ChatPanel(chatController, socket).getChatArea(chatController,socket);
         return chat;
     }
 
