@@ -1,10 +1,8 @@
 package com.binod.project.swing.chat;
-
-import com.binod.project.swing.components.ChatAreaBox;
-
+/**
+ * Created by Binod Bhandari on 8/4/18.
+ */
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,14 +13,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * Created by Binod Bhandari on 8/11/18.
- */
 public class PersonalChat {
 
     static class ChatController extends Observable {
@@ -42,18 +35,15 @@ public class PersonalChat {
 
             Thread thread = new Thread(() -> {
                 try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    bufferedReader.lines().forEach(this::notifyObservers);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    reader.lines().forEach(this::notifyObservers);
+                } catch (IOException ex) {
+                    notifyObservers(ex);
                 }
             });
             thread.start();
         }
-
-        public void send(String text) throws IOException {
-            initSocket();
+        public void send(String text) {
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
@@ -102,13 +92,8 @@ public class PersonalChat {
             ActionListener sendListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String str = inputTextField.getText();
-                    if (str != null && str.trim().length() > 0) {
-                        try {
-                            chatController.send(str);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
+                    if (str != null && str.trim().length() > 0)
+                        chatController.send(str);
                     inputTextField.selectAll();
                     inputTextField.requestFocus();
                     inputTextField.setText("");
@@ -125,13 +110,13 @@ public class PersonalChat {
             });
         }
 
-
-        @Override
         public void update(Observable o, Object arg) {
             final Object finalArg = arg;
-            SwingUtilities.invokeLater(() -> {
-                textArea.append(finalArg.toString());
-                textArea.append("\n");
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    textArea.append(finalArg.toString());
+                    textArea.append("\n");
+                }
             });
         }
     }

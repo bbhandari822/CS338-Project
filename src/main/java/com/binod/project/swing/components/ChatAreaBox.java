@@ -135,16 +135,19 @@ public class ChatAreaBox {
         @Override
         public void update(Observable o, Object arg) {
             final Object finalArg = arg;
-            SwingUtilities.invokeLater(() -> {
-                chatAreaBox.append(finalArg.toString());
-                chatAreaBox.append("\n");
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    chatAreaBox.append(finalArg.toString());
+                    chatAreaBox.append("\n");
+                }
             });
         }
     }
 
     public JPanel check(ChatController chatController) throws IOException {
-//        JPanel chat = new ChatPanel().getChatArea(chatController);
-        return new ChatPanel().getChatArea(chatController);
+        JPanel chat = new ChatPanel().getChatArea(chatController);
+//        return new ChatPanel().getChatArea(chatController);
+        return chat;
     }
 
 }
