@@ -8,6 +8,7 @@ import java.awt.*;
  */
 public class ChannelInformationMenu extends JFrame {
 
+    //return the tool bar
     public ChannelInformationMenu() {
 
         initUI();
@@ -23,8 +24,10 @@ public class ChannelInformationMenu extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    //imported the picture from a directory
     public JToolBar createToolBars() {
 
+        //submenu for the toolbar.
         JToolBar submenu = new JToolBar();
 
         ImageIcon starIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/star.jpg");

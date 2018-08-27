@@ -24,6 +24,9 @@ public class LogIn {
     private static JFrame loginFrame;
     private static JFrame logInSuccessMessageBox;
 
+    /*
+    Opens the login panel/form
+     */
     private JPanel getHeader() {
 
         JPanel header = new JPanel();
@@ -40,7 +43,7 @@ public class LogIn {
     private JPanel getLoginBox() {
         JPanel loginBox = new JPanel(new GridBagLayout());
         loginBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-        GridBagConstraints con = new GridBagConstraints();
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
         loginBox.setPreferredSize(new Dimension(400,250));
         loginBox.setBackground(Color.WHITE);
 
@@ -51,44 +54,44 @@ public class LogIn {
         JLabel enterYourCredentialLabel = new JLabel("Enter your credentials");
         enterYourCredentialLabel.setBorder(BorderFactory.createEmptyBorder(0, 120, 20, 30));
         enterYourCredentialLabel.setFont(new Font("Arial", Font.BOLD, 15));
-        con.gridx = 0;
-        con.gridy = 0;
-        con.ipady = 10;
-        con.fill = GridBagConstraints.HORIZONTAL;
-        con.gridwidth = 2;
-        con.weightx = 1;
-        con.anchor = GridBagConstraints.CENTER;
-        loginBox.add(signInLabel, con);
-        con.gridy++;
-        loginBox.add(enterYourCredentialLabel, con);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.anchor = GridBagConstraints.CENTER;
+        loginBox.add(signInLabel, gridBagConstraints);
+        gridBagConstraints.gridy++;
+        loginBox.add(enterYourCredentialLabel, gridBagConstraints);
 
-        con.ipady = 0;
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 1;
-        con.weightx = 0.3;
-        con.anchor = GridBagConstraints.PAGE_START;
-        loginBox.add(new JLabel("Username"), con);
-        con.gridy++;
-        loginBox.add(new JLabel("Password"), con);
+        gridBagConstraints.ipady = 0;
+        gridBagConstraints.gridy++;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 0.3;
+        gridBagConstraints.anchor = GridBagConstraints.PAGE_START;
+        loginBox.add(new JLabel("Username"), gridBagConstraints);
+        gridBagConstraints.gridy++;
+        loginBox.add(new JLabel("Password"), gridBagConstraints);
 
         JTextField usernameTextField = new JTextField();
         JPasswordField passwordTextField = new JPasswordField();
-        con.gridy = 2;
-        con.gridx = 1;
-        con.weightx = 0.7;
-        loginBox.add(usernameTextField, con);
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.weightx = 0.7;
+        loginBox.add(usernameTextField, gridBagConstraints);
 
-        con.gridy++;
-        loginBox.add(passwordTextField, con);
+        gridBagConstraints.gridy++;
+        loginBox.add(passwordTextField, gridBagConstraints);
 
-        con.ipady = 5;
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 2;
-        con.weightx = 1;
-        con.weighty = 0.3;
-        con.anchor = GridBagConstraints.CENTER;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.gridy++;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.anchor = GridBagConstraints.CENTER;
         JLabel login = new JLabel("<html>Don't have an account? <a href='#'>Sign Up</a></html>");
         login.addMouseListener(new MouseAdapter() {
             @Override
@@ -98,26 +101,28 @@ public class LogIn {
             }
         });
 
-        loginBox.add(login, con);
+        loginBox.add(login, gridBagConstraints);
 
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 1;
-        con.weightx = 0.5;
-        con.weighty = 0.7;
-        con.anchor = GridBagConstraints.PAGE_END;
-        //con.ipady = 10;
+        gridBagConstraints.gridy++;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.7;
+        gridBagConstraints.anchor = GridBagConstraints.PAGE_END;
+        //gridBagConstraints.ipady = 10;
         JButton cancelButton = new JButton("Cancel");
-        loginBox.add(cancelButton, con);
+        loginBox.add(cancelButton, gridBagConstraints);
 
-        con.gridx++;
+        gridBagConstraints.gridx++;
         JButton loginButton = new JButton("Login");
-        loginBox.add(loginButton, con);
+        loginBox.add(loginButton, gridBagConstraints);
 
         loginButton.addActionListener(e -> {
-            if(usernameTextField.getText().equals("D") && passwordTextField.getText().equals("H")){
-                if(validateLogIn(usernameTextField.getText(),passwordTextField.getText()))
-                    JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
+            if(usernameTextField.getText().equals("Drexel") && passwordTextField.getText().equals("cs338")){
+
+                //This is to get the data from database
+//                if(validateLogIn(usernameTextField.getText(),passwordTextField.getText()))
+                JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
                 loginFrame.dispose();
                 new Channel().loadGifAndOpenChannel();
             }else if(usernameTextField.getText().equals("") || passwordTextField.getText().equals("")){

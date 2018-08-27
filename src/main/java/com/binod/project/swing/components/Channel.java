@@ -21,6 +21,7 @@ public class Channel {
     private static final ThreadClients[] threads = new ThreadClients[20];
 
 
+    //load the gif and delay the channel form.
     public void loadGifAndOpenChannel(){
         new LoadingPage().loading();
         Timer timer = new Timer();
@@ -42,23 +43,19 @@ public class Channel {
 
         channelFrame = new JFrame("Channel 1");
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        channelFrame.setSize(1100, 880);
+        channelFrame.setSize(930, 880);
         channelFrame.setJMenuBar(new FrameMenuBar().showMenuBar(channelFrame));
-        channelFrame.getContentPane().add(new ChannelInformationMenu().createToolBars(), BorderLayout.NORTH);
-        channelFrame.getContentPane().add(BorderLayout.BEFORE_LINE_BEGINS, new ChannelInformationMenu().createToolBars());
+        channelFrame.getContentPane().add(BorderLayout.NORTH, new ChannelInformationMenu().createToolBars());
+        channelFrame.getContentPane().add(BorderLayout.WEST, new LeftPanelSearch().returnLeftPanel(channelFrame));
         channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController(), socket));
         channelFrame.setVisible(true);
 
     }
 
     private void channelReturn() throws IOException{
+        socket = new Socket("localhost", 3456);
         Channel channel = new Channel();
         channel.channelForm();
-    }
-
-    public static void main(String[] args) throws IOException {
-        socket = new Socket("localhost", 3456);
-        new Channel().channelForm();
     }
 
 }

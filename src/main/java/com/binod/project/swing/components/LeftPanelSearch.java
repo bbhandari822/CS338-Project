@@ -8,31 +8,45 @@ import java.awt.*;
  */
 public class LeftPanelSearch {
 
-    public LeftPanelSearch(Container contentPane) {
-        JPanel channelViewPanel = new JPanel(new BorderLayout(6,6));
+    private static JFrame frame = new JFrame();
+    private static JLayeredPane lpane = new JLayeredPane();
+    private static JPanel memberListPanel = new JPanel();
+    private static JPanel channelListPanel = new JPanel();
 
-        channelViewPanel.add(channelListPanel(), BorderLayout.NORTH);
-        channelViewPanel.add(memberListPanel(), BorderLayout.SOUTH);
+
+    public LeftPanelSearch() {
+        channelListPanel.setBackground(Color.BLUE);
+        channelListPanel.setBounds(-100, 300, 200, 300);
+        memberListPanel.setBackground(Color.GREEN);
+        memberListPanel.setBounds(0, 0, 300, 300);
+
     }
 
 
-    public JPanel channelListPanel(){
+    private static JPanel channelListPanel(){
 
-        JPanel channelListPanel = new JPanel();
+        channelListPanel = new JPanel();
+        JTextArea textArea = new JTextArea();
+        textArea.setRows(100);
+        textArea.setColumns(100);
+        channelListPanel.add(textArea);
+
         return channelListPanel;
     }
 
-    public JPanel memberListPanel(){
+    private static JPanel memberListPanel(){
 
-        JPanel memberListPanel = new JPanel();
+        memberListPanel = new JPanel();
         return memberListPanel;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Left Panel");
-        LeftPanelSearch form = new LeftPanelSearch(frame.getContentPane());
-        frame.setSize(600, 400);
-        frame.setVisible(true);
+    public JLayeredPane returnLeftPanel(JFrame frame){
+        frame.add(lpane, BorderLayout.CENTER);
+        lpane.setBounds(0, 0, 300, 300);
+        lpane.setSize(100,100);
+        lpane.add(memberListPanel, 0, 0);
+        lpane.add(channelListPanel, 1, 0);
+        return lpane;
     }
 
 }

@@ -12,12 +12,14 @@ import java.util.Date;
 public class ChannelDateBorder {
 
     private static String currentDateAndTime() {
+        //date formatter
         Date dateAndTime = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E yyyy.MM.dd hh:mm:ss a");
         return simpleDateFormat.format(dateAndTime);
     }
 
     public JPanel dateTopofChannel(){
+        //Date for the border
         JPanel dateAboveChannelPanel = new JPanel();
         dateAboveChannelPanel.setBorder(new TitledBorder(new EtchedBorder(), "---------------------------" +
                 "---------------------------------------" +

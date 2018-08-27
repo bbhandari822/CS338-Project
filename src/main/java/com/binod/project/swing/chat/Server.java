@@ -14,12 +14,16 @@ public class Server {
     public void connectToServer() throws IOException{
         System.out.println("Group Chat Started");
 
+        //server socket connection
+        //listens to port 3456
         ServerSocket serverSocket = new ServerSocket(3456);
         do {
             try {
                 Socket clientSocket = serverSocket.accept();
                 int i = 0;
-                if (i < 20 && clientSocket != null) {
+                //checks if the client Socket is null or not.
+                if (clientSocket != null) {
+                    //start the thread for every instances.
                     (threads[i] = new ThreadClients(clientSocket, threads)).start();
                     i++;
                 }

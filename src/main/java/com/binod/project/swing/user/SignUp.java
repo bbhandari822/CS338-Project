@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,7 +41,7 @@ public class SignUp {
     private JPanel getLoginBox() {
         JPanel signUpBox = new JPanel(new GridBagLayout());
         signUpBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-        GridBagConstraints con = new GridBagConstraints();
+        GridBagConstraints bagConstraints = new GridBagConstraints();
         signUpBox.setPreferredSize(new Dimension(500,400));
         signUpBox.setBackground(Color.LIGHT_GRAY);
 
@@ -51,32 +52,32 @@ public class SignUp {
         JLabel enterYourCredentialLabel = new JLabel("Enter your information");
         enterYourCredentialLabel.setBorder(BorderFactory.createEmptyBorder(0, 120, 20, 40));
         enterYourCredentialLabel.setFont(new Font("Arial", Font.BOLD, 15));
-        con.gridx = 0;
-        con.gridy = 0;
-        con.ipady = 10;
-        con.fill = GridBagConstraints.HORIZONTAL;
-        con.gridwidth = 2;
-        con.weightx = 1;
-        con.anchor = GridBagConstraints.CENTER;
-        signUpBox.add(signInLabel, con);
-        con.gridy++;
-        signUpBox.add(enterYourCredentialLabel, con);
+        bagConstraints.gridx = 0;
+        bagConstraints.gridy = 0;
+        bagConstraints.ipady = 10;
+        bagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        bagConstraints.gridwidth = 2;
+        bagConstraints.weightx = 1;
+        bagConstraints.anchor = GridBagConstraints.CENTER;
+        signUpBox.add(signInLabel, bagConstraints);
+        bagConstraints.gridy++;
+        signUpBox.add(enterYourCredentialLabel, bagConstraints);
 
-        con.ipady = 0;
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 1;
-        con.weightx = 0.3;
-        con.anchor = GridBagConstraints.PAGE_START;
-        signUpBox.add(new JLabel("Username"), con);
-        con.gridy++;
-        signUpBox.add(new JLabel("Password"), con);
-        con.gridy++;
-        signUpBox.add(new JLabel("Re-Enter Password"), con);
-        con.gridy++;
-        signUpBox.add(new JLabel("Email"), con);
-        con.gridy++;
-        signUpBox.add(new JLabel(("Phone Number")), con);
+        bagConstraints.ipady = 0;
+        bagConstraints.gridy++;
+        bagConstraints.gridx = 0;
+        bagConstraints.gridwidth = 1;
+        bagConstraints.weightx = 0.3;
+        bagConstraints.anchor = GridBagConstraints.PAGE_START;
+        signUpBox.add(new JLabel("Username"), bagConstraints);
+        bagConstraints.gridy++;
+        signUpBox.add(new JLabel("Password"), bagConstraints);
+        bagConstraints.gridy++;
+        signUpBox.add(new JLabel("Re-Enter Password"), bagConstraints);
+        bagConstraints.gridy++;
+        signUpBox.add(new JLabel("Email"), bagConstraints);
+        bagConstraints.gridy++;
+        signUpBox.add(new JLabel(("Phone Number")), bagConstraints);
 
         JTextField usernameTextField = new JTextField();
         JPasswordField passwordTextField = new JPasswordField();
@@ -84,45 +85,50 @@ public class SignUp {
         JTextField emailTextField = new JTextField();
         JTextField phoneNumberTextField = new JTextField();
 
-        con.gridy = 2;
-        con.gridx = 1;
-        con.weightx = 0.7;
-        signUpBox.add(usernameTextField, con);
+        bagConstraints.gridy = 2;
+        bagConstraints.gridx = 1;
+        bagConstraints.weightx = 0.7;
+        signUpBox.add(usernameTextField, bagConstraints);
 
-        con.gridy++;
-        signUpBox.add(passwordTextField, con);
+        bagConstraints.gridy++;
+        signUpBox.add(passwordTextField, bagConstraints);
 
-        con.gridy++;
-        signUpBox.add(reEnterPasswordTextField, con);
+        bagConstraints.gridy++;
+        signUpBox.add(reEnterPasswordTextField, bagConstraints);
 
-        con.gridy++;
-        signUpBox.add(emailTextField, con);
+        bagConstraints.gridy++;
+        signUpBox.add(emailTextField, bagConstraints);
 
-        con.gridy++;
-        signUpBox.add(phoneNumberTextField, con);
+        bagConstraints.gridy++;
+        signUpBox.add(phoneNumberTextField, bagConstraints);
 
-        con.ipady = 5;
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 2;
-        con.weightx = 1;
-        con.weighty = 0.3;
-        con.anchor = GridBagConstraints.CENTER;
-        JLabel signup = new JLabel("<html>Don't have an account? <a href='#'>Sign Up</a></html>");
-//        signUpBox.add(signup, con);
-
-        con.gridy++;
-        con.gridx = 0;
-        con.gridwidth = 1;
-        con.weightx = 0.5;
-        con.weighty = 0.7;
-        con.anchor = GridBagConstraints.PAGE_END;
+        bagConstraints.ipady = 5;
+        bagConstraints.gridy++;
+        bagConstraints.gridx = 0;
+        bagConstraints.gridwidth = 2;
+        bagConstraints.weightx = 1;
+        bagConstraints.weighty = 0.3;
+        bagConstraints.anchor = GridBagConstraints.CENTER;
+        JLabel login = new JLabel("<html>Go back to Login <a href='#'>Log In</a></html>");
+        login.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                signUpFrame.dispose();
+                LogIn.main();            }
+        });
+        signUpBox.add(login, bagConstraints);
+        bagConstraints.gridy++;
+        bagConstraints.gridx = 0;
+        bagConstraints.gridwidth = 1;
+        bagConstraints.weightx = 0.5;
+        bagConstraints.weighty = 0.7;
+        bagConstraints.anchor = GridBagConstraints.PAGE_END;
         JButton cancelButton = new JButton("Cancel");
-        signUpBox.add(cancelButton, con);
+        signUpBox.add(cancelButton, bagConstraints);
 
-        con.gridx++;
+        bagConstraints.gridx++;
         JButton signUpButton = new JButton("Sign Up");
-        signUpBox.add(signUpButton, con);
+        signUpBox.add(signUpButton, bagConstraints);
 
         cancelButton.addActionListener(e -> System.exit(0));
 

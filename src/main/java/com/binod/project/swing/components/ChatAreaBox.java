@@ -37,7 +37,9 @@ public class ChatAreaBox {
 
             Thread thread = new Thread(() -> {
                 try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    //get the input stream from the current socket.
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(socket.getInputStream()));
                     bufferedReader.lines().forEach(this::notifyObservers);
 
                 } catch (IOException e) {
@@ -52,11 +54,13 @@ public class ChatAreaBox {
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
+                //flush the messages
             } catch (IOException ex) {
                 notifyObservers(ex);
             }
         }
 
+        //close the socket connection.
         public void close() {
             try {
                 socket.close();

@@ -31,7 +31,6 @@ public class ThreadClients extends Thread{
 
     public void run() {
         int maxClientsCount = this.clientThreadNumber;
-        //ThreadClients[] threads = this.threads;
 
         try {
             dataInputStream = new DataInputStream(socketForClient.getInputStream());
@@ -46,6 +45,7 @@ public class ThreadClients extends Thread{
                 }
             }
 
+            //Print the information inside the chat area box.
             printStream.println("Welcome " + name + " to our chat room.\nTo leave enter exit.");
             System.out.println("Adding this client to active client list " + name);
             synchronized (this) {
@@ -73,6 +73,12 @@ public class ThreadClients extends Thread{
                         if (words[1].trim().isEmpty()) {
                             continue;
                         }
+                        /*
+                        when one thread is executing a synchronized method
+                        for an object, all other threads that invoke synchronized methods
+                        for the same object block suspend execution
+                        source: https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html
+                         */
                         synchronized (this) {
                             int i = 0;
                             while (i < maxClientsCount) {
@@ -102,11 +108,6 @@ public class ThreadClients extends Thread{
             }
             printStream.println(">>>>>>> Sad seeing you leave " + name + " >>>>>>>");
 
-            /*
-             * Clean up. Set the current thread variable to null so that a new client
-             * could be accepted by the server.
-             */
-
             synchronized (this) {
                 for (int i = 0; i < maxClientsCount; i++) {
                     if (threads[i] == this) {
@@ -114,9 +115,7 @@ public class ThreadClients extends Thread{
                     }
                 }
             }
-            /*
-             * Close the output stream, close the input stream, close the socket.
-             */
+            //close all the stream
             dataInputStream.close();
             printStream.close();
             socketForClient.close();
