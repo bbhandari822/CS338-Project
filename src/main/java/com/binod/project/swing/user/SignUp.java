@@ -8,7 +8,12 @@ import com.binod.project.swing.components.Channel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class SignUp {
@@ -17,6 +22,7 @@ public class SignUp {
     private static JTextField passwordTextField;
     private static JFrame signUpFrame;
     private static JFrame SignUpSuccessMessageBox;
+    private Connection connection;
 
     private JPanel getHeader() {
 
@@ -36,9 +42,9 @@ public class SignUp {
         signUpBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridBagConstraints con = new GridBagConstraints();
         signUpBox.setPreferredSize(new Dimension(500,400));
-        signUpBox.setBackground(Color.WHITE);
+        signUpBox.setBackground(Color.LIGHT_GRAY);
 
-        JLabel signInLabel = new JLabel("Sign up to your chat room");
+        JLabel signInLabel = new JLabel("Sign up to the chat room");
         signInLabel.setBorder(BorderFactory.createEmptyBorder(0, 100, 20, 40));
         signInLabel.setFont(new Font("Arial", Font.BOLD, 17));
 
@@ -123,6 +129,27 @@ public class SignUp {
         signUpButton.addActionListener(e -> {
             if(!passwordTextField.getText().equals(reEnterPasswordTextField.getText())){
                 JOptionPane.showMessageDialog(SignUpSuccessMessageBox, "Sorry password does not match");
+            }else{
+                String url = "jdbc:mysql://localhost:8181/userData";
+                Connection connection = null;
+                try {
+                    connection = DriverManager.getConnection(url, "user", "user");
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                String sql = "INSERT INTO USERDATA(username,password,email,phoneNumber) VALUES(?,?,?,?)";
+
+                try {
+                    assert connection != null;
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, String.valueOf(usernameTextField));
+                    preparedStatement.setString(2, String.valueOf(passwordTextField));
+                    preparedStatement.setString(3, String.valueOf(emailTextField));
+                    preparedStatement.setString(4, String.valueOf(phoneNumberTextField));
+                    preparedStatement.executeUpdate(sql);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
@@ -155,7 +182,7 @@ public class SignUp {
         SignUp form = new SignUp(signUpFrame.getContentPane());
         signUpFrame.setSize(600, 480);
         signUpFrame.setVisible(true);
-        signUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        signUpFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
 }

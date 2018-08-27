@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * Created by Binod Bhandari on 7/30/18.
@@ -112,7 +116,8 @@ public class LogIn {
 
         loginButton.addActionListener(e -> {
             if(usernameTextField.getText().equals("D") && passwordTextField.getText().equals("H")){
-                JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
+                if(validateLogIn(usernameTextField.getText(),passwordTextField.getText()))
+                    JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
                 loginFrame.dispose();
                 new Channel().loadGifAndOpenChannel();
             }else if(usernameTextField.getText().equals("") || passwordTextField.getText().equals("")){
@@ -127,6 +132,22 @@ public class LogIn {
         cancelButton.addActionListener(e -> System.exit(0));
         return loginBox;
     }
+
+    private boolean validateLogIn(String text, String text1) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdata?" + "user=root&password=");
+            PreparedStatement preparedStatement = conn.prepareStatement("Select * from USERDATA where username=? and password=?");
+            preparedStatement.setString(1, usernameTextField.getText());
+            preparedStatement.setString(2, passwordTextField.getText());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public LogIn(Container container) {
 
         container.setLayout(new GridBagLayout());
@@ -153,7 +174,7 @@ public class LogIn {
         LogIn form = new LogIn(loginFrame.getContentPane());
         loginFrame.setSize(600, 480);
         loginFrame.setVisible(true);
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
 }
