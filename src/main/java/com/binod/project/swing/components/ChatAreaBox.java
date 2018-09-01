@@ -95,8 +95,9 @@ public class ChatAreaBox {
             chatAreaPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
                     getCurrentDateAndTime() + "------------------------------------------------"));
 
-            chatAreaBox = new JTextArea(45, 65);
+            chatAreaBox = new JTextArea(45, 55);
             chatAreaBox.setEditable(false);
+            chatAreaBox.setText("Enter your name \n");
             JScrollPane jScrollPane = new JScrollPane(chatAreaBox);
             jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -106,16 +107,13 @@ public class ChatAreaBox {
             gridBagConstraints.weighty = 1.0;
             chatAreaPanel.add(jScrollPane, gridBagConstraints);
 
-            textField = new JTextField(59);
-            textField.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String text = textField.getText();
-                    chatAreaBox.append(text + "\n");
-                    textField.selectAll();
-                    chatAreaBox.setCaretPosition(chatAreaBox.getDocument().getLength());
-                    textField.setText("");
-                }
+            textField = new JTextField(49);
+            textField.addActionListener(e -> {
+                String text = textField.getText();
+                chatAreaBox.append(text + "\n");
+                textField.selectAll();
+                chatAreaBox.setCaretPosition(chatAreaBox.getDocument().getLength());
+                textField.setText("");
             });
             gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
             gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;

@@ -36,7 +36,7 @@ public class ThreadClients extends Thread{
             dataInputStream = new DataInputStream(socketForClient.getInputStream());
             printStream = new PrintStream(socketForClient.getOutputStream());
             while (true) {
-                printStream.println("Enter your name.");
+//                printStream.println("Enter your name.");
                 name = dataInputStream.readLine().trim();
                 if (name.indexOf('@') == -1) {
                     break;

@@ -43,7 +43,7 @@ public class Channel {
 
         channelFrame = new JFrame("Channel 1");
         channelFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        channelFrame.setSize(930, 880);
+        channelFrame.setSize(1100, 880);
         channelFrame.setJMenuBar(new FrameMenuBar().showMenuBar(channelFrame));
         channelFrame.getContentPane().add(BorderLayout.NORTH, new ChannelInformationMenu().createToolBars());
         channelFrame.getContentPane().add(BorderLayout.WEST, new LeftPanelSearch().returnLeftPanel(channelFrame));
