@@ -49,8 +49,7 @@ public class ChatAreaBox {
             thread.start();
         }
 
-        public void send(String text, Socket socket) throws IOException {
-            initSocket(socket);
+        public void send(String text) {
             try {
                 outputStream.write((text + "\r\n").getBytes());
                 outputStream.flush();
@@ -70,17 +69,18 @@ public class ChatAreaBox {
         }
     }
 
-    static class ChatPanel implements Observer {
+    static class ChatPanel extends JFrame implements Observer {
 
         private JTextField textField;
         private JTextArea chatAreaBox;
         private ChatController chatController;
+        private JButton send;
         private JPanel chatAreaPanel;
 
-        public ChatPanel(ChatController chatController, Socket socket) throws IOException {
+        public ChatPanel(ChatController chatController) {
             this.chatController = chatController ;
             chatController.addObserver(this);
-            getChatArea(chatController,socket);
+            getChatArea();
         }
 
         private static String getCurrentDateAndTime() {
@@ -89,7 +89,7 @@ public class ChatAreaBox {
             return simpleDateFormat.format(dateAndTime);
         }
 
-        public JPanel getChatArea(ChatController chatController, Socket socket) throws IOException {
+        public JPanel getChatArea() {
 
             chatAreaPanel = new JPanel();
             chatAreaPanel.setBorder(new TitledBorder(new EtchedBorder(), "--------------------------------------" +
@@ -97,7 +97,6 @@ public class ChatAreaBox {
 
             chatAreaBox = new JTextArea(45, 55);
             chatAreaBox.setEditable(false);
-            chatAreaBox.setText("Enter your name \n");
             JScrollPane jScrollPane = new JScrollPane(chatAreaBox);
             jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -108,31 +107,21 @@ public class ChatAreaBox {
             chatAreaPanel.add(jScrollPane, gridBagConstraints);
 
             textField = new JTextField(49);
-            textField.addActionListener(e -> {
-                String text = textField.getText();
-                chatAreaBox.append(text + "\n");
-                textField.selectAll();
-                chatAreaBox.setCaretPosition(chatAreaBox.getDocument().getLength());
-                textField.setText("");
-            });
             gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
             gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
             chatAreaPanel.add(textField, gridBagConstraints);
-            JButton send = new JButton("Send");
+            send = new JButton("Send");
             chatAreaPanel.add(send);
-
-            ActionListener sendActionListener = (ActionEvent e) -> {
-                String messageString = textField.getText();
-                if (messageString.trim().length() > 0) {
-                    try {
-                        chatController.send(messageString, socket);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+            add(chatAreaPanel);
+            ActionListener sendActionListener = e -> {
+                String str = textField.getText();
+                if (str != null && str.trim().length() > 0)
+                    chatController.send(str);
                 textField.selectAll();
                 textField.requestFocus();
+                textField.setText("");
             };
+
             textField.addActionListener(sendActionListener);
             send.addActionListener(sendActionListener);
             Component component = chatAreaPanel;
@@ -161,11 +150,6 @@ public class ChatAreaBox {
                 }
             });
         }
-    }
-
-    public JPanel check(ChatController chatController, Socket socket) throws IOException {
-        JPanel chat = new ChatPanel(chatController, socket).getChatArea(chatController,socket);
-        return chat;
     }
 
 }

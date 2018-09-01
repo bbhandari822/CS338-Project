@@ -3,6 +3,7 @@ package com.binod.project.swing.components;
 import com.binod.project.swing.chat.ThreadClients;
 import com.binod.project.swing.user.LoadingPage;
 import lombok.Data;
+import oracle.jvm.hotspot.jfr.JFR;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,8 @@ public class Channel {
     private static Socket socket;
     private JFrame channelFrame;
     private static final ThreadClients[] threads = new ThreadClients[20];
+    private ChatAreaBox.ChatController access;
+    private JPanel frame;
 
 
     //load the gif and delay the channel form.
@@ -30,7 +33,7 @@ public class Channel {
                     @Override
                     public void run() {
                         try {
-                            new Channel().channelReturn();
+                            Channel.main();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -47,15 +50,21 @@ public class Channel {
         channelFrame.setJMenuBar(new FrameMenuBar().showMenuBar(channelFrame));
         channelFrame.getContentPane().add(BorderLayout.NORTH, new ChannelInformationMenu().createToolBars());
         channelFrame.getContentPane().add(BorderLayout.WEST, new LeftPanelSearch().returnLeftPanel(channelFrame));
-        channelFrame.getContentPane().add(BorderLayout.CENTER, new ChatAreaBox().check(new ChatAreaBox.ChatController(), socket));
+        channelFrame.getContentPane().add(BorderLayout.CENTER, frame);
         channelFrame.setVisible(true);
 
     }
 
     private void channelReturn() throws IOException{
         socket = new Socket("localhost", 3456);
-        Channel channel = new Channel();
-        channel.channelForm();
+        access = new ChatAreaBox.ChatController();
+        frame = new ChatAreaBox.ChatPanel(access).getChatArea();
+        access.initSocket(socket);
     }
 
+    public static void main(String... args) throws IOException {
+        Channel channel = new Channel();
+        channel.channelReturn();
+        channel.channelForm();
+    }
 }
