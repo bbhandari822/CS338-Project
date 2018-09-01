@@ -5,25 +5,75 @@ package com.binod.project.swing.user;
  */
 
 import com.binod.project.swing.components.Channel;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 
-
+@Data
 public class SignUp {
 
     private static JTextField usernameTextField;
     private static JTextField passwordTextField;
     private static JFrame signUpFrame;
     private static JFrame SignUpSuccessMessageBox;
+
     private Connection connection;
+    private Properties properties;
+
+    @Value("binod.cs338.datasource.jdbcUrl")
+    private String connectionString;
+
+    @Value("binod.cs338.datasource.username")
+    private String username;
+
+    @Value("binod.cs338.datasource.password")
+    private String password;
+
+    private String query = "INSERT INTO USERDATA(username,password,email,phoneNumber) VALUES(?,?,?,?)";
+
+    public SignUp(Container container) {
+
+        try {
+            properties = PropertiesLoaderUtils.loadAllProperties("application.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        query = properties.getProperty("binod.cs338.datasource.query");
+        connectionString = properties.getProperty("binod.cs338.datasource.jdbcUrl");
+        username = properties.getProperty("binod.cs338.datasource.username");
+        password = properties.getProperty("binod.cs338.datasource.password");
+
+        container.setLayout(new GridBagLayout());
+        GridBagConstraints con = new GridBagConstraints();
+        con.anchor = GridBagConstraints.FIRST_LINE_START;
+        con.gridx = 0;
+        con.weightx = 1;
+        con.gridy = 0;
+        con.weighty = 0.5;
+        con.gridwidth = 3;
+        con.fill = GridBagConstraints.HORIZONTAL;
+        container.add(getHeader(), con);
+        con.anchor = GridBagConstraints.CENTER;
+        con.gridx++;
+        con.gridy++;
+        con.weightx = 1;
+        con.weighty = 0.5;
+        con.anchor = GridBagConstraints.PAGE_START;
+        con.fill = GridBagConstraints.NONE;
+        container.add(getLoginBox(), con);
+    }
 
     private JPanel getHeader() {
 
@@ -136,23 +186,21 @@ public class SignUp {
             if(!passwordTextField.getText().equals(reEnterPasswordTextField.getText())){
                 JOptionPane.showMessageDialog(SignUpSuccessMessageBox, "Sorry password does not match");
             }else{
-                String url = "jdbc:mysql://localhost:8181/userData";
-                Connection connection = null;
                 try {
-                    connection = DriverManager.getConnection(url, "user", "user");
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
+                    connection = DriverManager.getConnection(connectionString, username,password);
+                    connection.createStatement();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
-                String sql = "INSERT INTO USERDATA(username,password,email,phoneNumber) VALUES(?,?,?,?)";
 
                 try {
                     assert connection != null;
-                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                    PreparedStatement preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, String.valueOf(usernameTextField));
                     preparedStatement.setString(2, String.valueOf(passwordTextField));
                     preparedStatement.setString(3, String.valueOf(emailTextField));
                     preparedStatement.setString(4, String.valueOf(phoneNumberTextField));
-                    preparedStatement.executeUpdate(sql);
+                    preparedStatement.executeUpdate();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
@@ -160,27 +208,6 @@ public class SignUp {
         });
 
         return signUpBox;
-    }
-    public SignUp(Container container) {
-
-        container.setLayout(new GridBagLayout());
-        GridBagConstraints con = new GridBagConstraints();
-        con.anchor = GridBagConstraints.FIRST_LINE_START;
-        con.gridx = 0;
-        con.weightx = 1;
-        con.gridy = 0;
-        con.weighty = 0.5;
-        con.gridwidth = 3;
-        con.fill = GridBagConstraints.HORIZONTAL;
-        container.add(getHeader(), con);
-        con.anchor = GridBagConstraints.CENTER;
-        con.gridx++;
-        con.gridy++;
-        con.weightx = 1;
-        con.weighty = 0.5;
-        con.anchor = GridBagConstraints.PAGE_START;
-        con.fill = GridBagConstraints.NONE;
-        container.add(getLoginBox(), con);
     }
 
     public static void main(String... args) {
