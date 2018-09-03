@@ -22,10 +22,11 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 int i = 0;
                 //checks if the client Socket is null or not.
-                if (clientSocket != null) {
-                    //start the thread for every instances.
-                    (threads[i] = new ThreadClients(clientSocket, threads)).start();
-                    i++;
+                for (i = 0; i < 20; i++) {
+                    if (threads[i] == null) {
+                        (threads[i] = new ThreadClients(clientSocket, threads)).start();
+                        break;
+                    }
                 }
 
             } catch (IOException e) {
@@ -33,7 +34,7 @@ public class Server {
             }
         } while (true);
     }
-//    public static void main(String[] args) throws IOException {
-//        new Server().connectToServer();
-//    }
+    public static void main(String[] args) throws IOException {
+        new Server().connectToServer();
+    }
 }
