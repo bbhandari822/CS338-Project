@@ -210,7 +210,7 @@ public class SignUp {
         return signUpBox;
     }
 
-    public static void main(String... args) {
+    public static void maini(String... args) {
         signUpFrame = new JFrame("Sign Up Window");
         SignUp form = new SignUp(signUpFrame.getContentPane());
         signUpFrame.setSize(600, 480);

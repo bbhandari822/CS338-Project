@@ -3,7 +3,6 @@ package com.binod.project.swing.components;
 import com.binod.project.swing.chat.ThreadClients;
 import com.binod.project.swing.user.LoadingPage;
 import lombok.Data;
-import oracle.jvm.hotspot.jfr.JFR;
 
 import javax.swing.*;
 import java.awt.*;

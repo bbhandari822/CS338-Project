@@ -1,6 +1,10 @@
 package com.binod.project.swing.user;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Timer;
 
 /**
@@ -12,7 +16,7 @@ public class LoadingPage {
     public void loading(){
 
         JFrame loadingFrame = new JFrame("Please Wait!");
-        ImageIcon loading = new ImageIcon("src/main/java/com/binod/project/swing/pictures/loading.gif");
+        ImageIcon loading = new ImageIcon(new File(new File("pictures/loading.gif").getAbsolutePath()).toString());
         loadingFrame.add(new JLabel(loading, JLabel.CENTER));
         loadingFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         loadingFrame.setSize(550, 550);

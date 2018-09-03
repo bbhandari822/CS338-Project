@@ -2,7 +2,6 @@ group 'com.binod.project.swing'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'application'
 
@@ -24,15 +23,8 @@ jar {
     baseName = 'swing-project-java'
     version =  version
     manifest {
-        attributes 'Implementation-Title': 'Swing Project',
-                'Implementation-Version': version
-    }
-}
+        attributes 'Main-Class': 'com.binod.project.swing.ApplicationRunner'
 
-eclipse {
-    classpath {
-        downloadJavadoc = true
-        downloadSources = true
     }
 }
 

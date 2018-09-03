@@ -137,6 +137,7 @@ public class LeftPanelSearch extends Component {
         if (memberName == null) {
             return;
         }
+        Collections.sort(members);
         int foundIndex = Collections.binarySearch(members, new Member(memberName));
         if (foundIndex >= 0) {
             listPerson.setSelectedIndex(foundIndex);

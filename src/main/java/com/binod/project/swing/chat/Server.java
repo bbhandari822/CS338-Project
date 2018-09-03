@@ -33,7 +33,7 @@ public class Server {
             }
         } while (true);
     }
-    public static void main(String[] args) throws IOException {
-        new Server().connectToServer();
-    }
+//    public static void main(String[] args) throws IOException {
+//        new Server().connectToServer();
+//    }
 }

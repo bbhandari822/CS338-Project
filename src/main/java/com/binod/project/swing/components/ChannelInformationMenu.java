@@ -2,6 +2,7 @@ package com.binod.project.swing.components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 /**
  * Created by Binod Bhandari on 8/19/18.
@@ -30,13 +31,13 @@ public class ChannelInformationMenu extends JFrame {
         //submenu for the toolbar.
         JToolBar submenu = new JToolBar();
 
-        ImageIcon starIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/star.jpg");
-        ImageIcon peopleIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/peopleIcon.jpg");
-        ImageIcon thumbIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/thumb.jpg");
+        ImageIcon starIcon = new ImageIcon(new File(new File("pictures/star.jpg").getAbsolutePath()).toString());
+        ImageIcon peopleIcon = new ImageIcon(new File(new File("pictures/peopleIcon.jpg").getAbsolutePath()).toString());
+        ImageIcon thumbIcon = new ImageIcon(new File(new File("pictures/thumb.jpg").getAbsolutePath()).toString());
 
-        ImageIcon phoneIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/phone.jpg");
-        ImageIcon infoIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/info.jpg");
-        ImageIcon settingIcon = new ImageIcon("src/main/java/com/binod/project/swing/pictures/setting.jpg");
+        ImageIcon phoneIcon = new ImageIcon(new File(new File("pictures/phone.jpg").getAbsolutePath()).toString());
+        ImageIcon infoIcon = new ImageIcon(new File(new File("pictures/info.jpg").getAbsolutePath()).toString());
+        ImageIcon settingIcon = new ImageIcon(new File(new File("pictures/setting.jpg").getAbsolutePath()).toString());
 
         JButton starButton = new JButton(starIcon);
         JButton peopleButton = new JButton(peopleIcon);

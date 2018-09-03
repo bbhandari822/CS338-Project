@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by Binod Bhandari on 8/15/18.
@@ -56,7 +57,7 @@ public class FrameMenuBar {
         JMenuItem toggleFullScreen = new JMenuItem("Toggle Full Screen");
         JMenuItem actualSize = new JMenuItem("Actual Size");
         actualSize.addActionListener(e -> {
-            channelFrame.setPreferredSize(new Dimension(1120, 850));
+            channelFrame.setPreferredSize(new Dimension(1100, 880));
             channelFrame.pack();
             channelFrame.setVisible(true);
         });
@@ -65,6 +66,13 @@ public class FrameMenuBar {
 
 
         viewMenu.add(reload);
+        reload.addActionListener(e -> {
+            SwingUtilities.updateComponentTreeUI(channelFrame);
+            channelFrame.invalidate();
+            channelFrame.validate();
+            channelFrame.repaint();
+        });
+
         viewMenu.add(toggleFullScreen);
         viewMenu.add(actualSize);
         viewMenu.add(zoomIn);

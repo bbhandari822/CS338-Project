@@ -97,7 +97,7 @@ public class LogIn {
             @Override
             public void mouseClicked(MouseEvent e) {
                 loginFrame.dispose();
-                SignUp.main();
+                SignUp.maini();
             }
         });
 
