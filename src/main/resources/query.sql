@@ -1,10 +1,12 @@
 
-CREATE TABLE userdata.USERDATA (
-    id int PRIMARY KEY,
+-- DROP TABLE cs338.USERDATA
+
+CREATE TABLE cs338.USERDATA (
+    id int PRIMARY KEY AUTO_INCREMENT,
     username varchar(255),
     password varchar(255),
     email varchar(255),
     phone VARCHAR(10)
 );
 
-INSERT INTO USERDATA(username,password,email,phone) VALUE (aa,bb,cc,1111);
+INSERT INTO cs338.USERDATA(username,password,email,phone) VALUE ('bbhanda','password','bb822@drexel.edu',1111);

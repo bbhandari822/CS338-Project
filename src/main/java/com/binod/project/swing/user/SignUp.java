@@ -4,14 +4,13 @@ package com.binod.project.swing.user;
  * Created by Binod Bhandari on 7/30/18.
  */
 
-import com.binod.project.swing.components.Channel;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ContainerEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 @Data
+@PropertySource(value = { "classpath:application.properties" })
 public class SignUp {
 
     private static JTextField usernameTextField;
@@ -32,16 +32,17 @@ public class SignUp {
     private Connection connection;
     private Properties properties;
 
-    @Value("binod.cs338.datasource.jdbcUrl")
+    @Value("${binod.cs338.datasource.jdbcUrl}")
     private String connectionString;
 
-    @Value("binod.cs338.datasource.username")
+    @Value("${binod.cs338.datasource.username}")
     private String username;
 
-    @Value("binod.cs338.datasource.password")
+    @Value("${binod.cs338.datasource.password}")
     private String password;
 
-    private String query = "INSERT INTO USERDATA(username,password,email,phoneNumber) VALUES(?,?,?,?)";
+    @Value("${binod.cs338.datasource.query}")
+    private String query;
 
     public SignUp(Container container) {
 
@@ -76,7 +77,10 @@ public class SignUp {
     }
 
     private JPanel getHeader() {
+        return getPanel();
+    }
 
+    static JPanel getPanel() {
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.setBackground(Color.WHITE);
@@ -196,11 +200,13 @@ public class SignUp {
                 try {
                     assert connection != null;
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
-                    preparedStatement.setString(1, String.valueOf(usernameTextField));
-                    preparedStatement.setString(2, String.valueOf(passwordTextField));
-                    preparedStatement.setString(3, String.valueOf(emailTextField));
-                    preparedStatement.setString(4, String.valueOf(phoneNumberTextField));
+                    preparedStatement.setString(1, String.valueOf(usernameTextField.getText()));
+                    preparedStatement.setString(2, String.valueOf(reEnterPasswordTextField.getText()));
+                    preparedStatement.setString(3, String.valueOf(emailTextField.getText()));
+                    preparedStatement.setString(4, String.valueOf(phoneNumberTextField.getText()));
                     preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(SignUpSuccessMessageBox, "Data successfully entered in the database");
+                    SignUp.maini();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }

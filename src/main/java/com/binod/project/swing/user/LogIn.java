@@ -1,6 +1,9 @@
 package com.binod.project.swing.user;
 
 import com.binod.project.swing.components.Channel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,15 +11,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Properties;
+
+import static com.binod.project.swing.user.SignUp.getPanel;
 
 /**
  * Created by Binod Bhandari on 7/30/18.
  */
-
+@PropertySource(value = { "classpath:application.properties" })
 public class LogIn {
 
     private static JTextField usernameTextField;
@@ -24,20 +31,22 @@ public class LogIn {
     private static JFrame loginFrame;
     private static JFrame logInSuccessMessageBox;
 
+    @Value("${binod.cs338.datasource.username}")
+    private String username;
+
+    @Value("${binod.cs338.datasource.password}")
+    private String password;
+
+    @Value("${binod.cs338.datasource.jdbcUrl}")
+    private String connectionString;
+
+    private Properties properties;
     /*
     Opens the login panel/form
      */
     private JPanel getHeader() {
 
-        JPanel header = new JPanel();
-        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
-        header.setBackground(Color.WHITE);
-        JLabel title = new JLabel("Drexel Chat Room");
-        title.setBorder(BorderFactory.createEmptyBorder(20, 5, 20, 5));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font("Arial", Font.PLAIN, 20));
-        header.add(title);
-        return header;
+        return getPanel();
     }
 
     private JPanel getLoginBox() {
@@ -97,7 +106,7 @@ public class LogIn {
             @Override
             public void mouseClicked(MouseEvent e) {
                 loginFrame.dispose();
-                SignUp.maini();
+                new SignUp(loginFrame).maini();
             }
         });
 
@@ -118,13 +127,14 @@ public class LogIn {
         loginBox.add(loginButton, gridBagConstraints);
 
         loginButton.addActionListener(e -> {
-            if(usernameTextField.getText().equals("Drexel") && passwordTextField.getText().equals("cs338")){
+//            if(usernameTextField.getText().equals("Drexel") && passwordTextField.getText().equals("cs338")){
 
                 //This is to get the data from database
-//                if(validateLogIn(usernameTextField.getText(),passwordTextField.getText()))
-                JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
-                loginFrame.dispose();
-                new Channel().loadGifAndOpenChannel();
+            if(validateLogIn(usernameTextField.getText(),passwordTextField.getText())){
+                    JOptionPane.showMessageDialog(logInSuccessMessageBox, "Log in successful!");
+                    loginFrame.dispose();
+                    new Channel().loadGifAndOpenChannel();
+
             }else if(usernameTextField.getText().equals("") || passwordTextField.getText().equals("")){
                 JOptionPane.showMessageDialog (null, "Please fill out all the information!",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -138,13 +148,12 @@ public class LogIn {
         return loginBox;
     }
 
-    private boolean validateLogIn(String text, String text1) {
+    private boolean validateLogIn(String userName, String userPassword) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/userdata?" + "user=root&password=");
-            PreparedStatement preparedStatement = conn.prepareStatement("Select * from USERDATA where username=? and password=?");
-            preparedStatement.setString(1, usernameTextField.getText());
-            preparedStatement.setString(2, passwordTextField.getText());
+            Connection conn = DriverManager.getConnection(connectionString, username,password);
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM USERDATA WHERE username=(?) AND password=(?);");
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, userPassword);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         }catch (Exception e){
@@ -154,6 +163,15 @@ public class LogIn {
     }
 
     public LogIn(Container container) {
+
+        try {
+            properties = PropertiesLoaderUtils.loadAllProperties("application.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        connectionString = properties.getProperty("binod.cs338.datasource.jdbcUrl");
+        username = properties.getProperty("binod.cs338.datasource.username");
+        password = properties.getProperty("binod.cs338.datasource.password");
 
         container.setLayout(new GridBagLayout());
         GridBagConstraints con = new GridBagConstraints();
