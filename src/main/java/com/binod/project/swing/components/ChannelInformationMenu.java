@@ -2,7 +2,13 @@ package com.binod.project.swing.components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+
+import static com.sun.webkit.graphics.WCImage.getImage;
 
 /**
  * Created by Binod Bhandari on 8/19/18.
@@ -27,17 +33,39 @@ public class ChannelInformationMenu extends JFrame {
 
     //imported the picture from a directory
     public JToolBar createToolBars() {
-
         //submenu for the toolbar.
         JToolBar submenu = new JToolBar();
 
-        ImageIcon starIcon = new ImageIcon(new File(new File("pictures/star.jpg").getAbsolutePath()).toString());
-        ImageIcon peopleIcon = new ImageIcon(new File(new File("pictures/peopleIcon.jpg").getAbsolutePath()).toString());
-        ImageIcon thumbIcon = new ImageIcon(new File(new File("pictures/thumb.jpg").getAbsolutePath()).toString());
+        ClassLoader cldr = ChannelInformationMenu.class.getClassLoader();
+        URL urlStar = ChannelInformationMenu.class.getResource("/star.jpg");
+        if (urlStar == null)
+            urlStar = cldr.getResource("/star.jpg");
+        ImageIcon starIcon = new ImageIcon(urlStar);
 
-        ImageIcon phoneIcon = new ImageIcon(new File(new File("pictures/phone.jpg").getAbsolutePath()).toString());
-        ImageIcon infoIcon = new ImageIcon(new File(new File("pictures/info.jpg").getAbsolutePath()).toString());
-        ImageIcon settingIcon = new ImageIcon(new File(new File("pictures/setting.jpg").getAbsolutePath()).toString());
+        URL urlPeople = ChannelInformationMenu.class.getResource("/peopleicon.jpg");
+        if (urlPeople == null)
+            urlPeople = cldr.getResource("/peopleicon.jpg");
+        ImageIcon peopleIcon = new ImageIcon(urlPeople);
+
+        URL urlThumb = ChannelInformationMenu.class.getResource("/thumb.jpg");
+        if (urlThumb == null)
+            urlThumb = cldr.getResource("/thumb.jpg");
+        ImageIcon thumbIcon = new ImageIcon(urlThumb);
+
+        URL urlPhone = ChannelInformationMenu.class.getResource("/phone.jpg");
+        if (urlPhone == null)
+            urlPhone = cldr.getResource("/phone.jpg");
+        ImageIcon phoneIcon = new ImageIcon(urlPhone);
+
+        URL urlInfo = ChannelInformationMenu.class.getResource("/info.jpg");
+        if (urlInfo == null)
+            urlInfo = cldr.getResource("/info.jpg");
+        ImageIcon infoIcon = new ImageIcon(urlInfo);
+
+        URL urlSetting = ChannelInformationMenu.class.getResource("/setting.jpg");
+        if (urlSetting == null)
+            urlSetting = cldr.getResource("/setting.jpg");
+        ImageIcon settingIcon = new ImageIcon(urlSetting);
 
         JButton starButton = new JButton(starIcon);
         JButton peopleButton = new JButton(peopleIcon);
