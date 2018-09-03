@@ -19,7 +19,6 @@ public class ThreadClients extends Thread{
     private ThreadClients[] threads = null;
     private int clientThreadNumber;
     private String name;
-    private DataInputStream dataInputStream;
 
 
     public ThreadClients(Socket clientSocket, ThreadClients[] threads) {
@@ -34,7 +33,7 @@ public class ThreadClients extends Thread{
         ThreadClients[] threads = this.threads;
 
         try {
-            dataInputStream = new DataInputStream(socketForClient.getInputStream());
+            DataInputStream dataInputStream = new DataInputStream(socketForClient.getInputStream());
             printStream = new PrintStream(socketForClient.getOutputStream());
             while (true) {
                 printStream.println("Enter your name.");

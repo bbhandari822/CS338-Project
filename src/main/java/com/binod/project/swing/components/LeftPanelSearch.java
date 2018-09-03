@@ -1,16 +1,19 @@
 package com.binod.project.swing.components;
 
+import com.binod.project.swing.domain.Member;
+import com.binod.project.swing.domain.MemberCustomList;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Binod Bhandari on 8/19/18.
  */
-public class LeftPanelSearch {
+public class LeftPanelSearch extends Component {
 
     private static JFrame frame = new JFrame();
     private static JLayeredPane lpane = new JLayeredPane();
@@ -18,20 +21,26 @@ public class LeftPanelSearch {
     private static JPanel channelListPanel = new JPanel();
     private static JTextArea channelAreaBox;
     private static JTextField channelTextField;
-    private static JTextArea memberAreaBox;
-    private static JTextField memberTextField;
-    private static JFrame memberSuccessDialog;
-    private static JFrame channelSuccessDialog;
+    private static JFrame showErrorMessage;
 
 
+    private MemberCustomList<Member> listModel;
+    private JList<Member> listPerson = new JList<>();
+    private java.util.List<Member> members = new ArrayList<>();
 
     public LeftPanelSearch() {
         memberListPanel().setBorder(BorderFactory.createLineBorder(Color.GRAY));
         memberListPanel.setBounds(5, 20, 300, 350);
         memberListPanel.setBorder(new TitledBorder(new EtchedBorder(), "Members"));
+        TitledBorder titledBorderMember = (TitledBorder)memberListPanel.getBorder();
+        titledBorderMember.setTitleColor(Color.WHITE);
+        memberListPanel.setBackground(Color.decode("#601760"));
         channelListPanel().setBorder(BorderFactory.createLineBorder(Color.GRAY));
         channelListPanel.setBounds(5, 400, 300, 345);
         channelListPanel.setBorder(new TitledBorder(new EtchedBorder(), "Channels"));
+        TitledBorder titledBorderChannel = (TitledBorder)channelListPanel.getBorder();
+        titledBorderChannel.setTitleColor(Color.WHITE);
+        channelListPanel.setBackground(Color.decode("#601760"));
 
     }
 
@@ -41,7 +50,7 @@ public class LeftPanelSearch {
         channelListPanel = new JPanel();
         channelAreaBox = new JTextArea(17, 22);
         channelAreaBox.setEditable(false);
-        channelAreaBox.setText("Channel 1");
+        channelAreaBox.setText("Channel 1\n");
         JScrollPane jScrollPane = new JScrollPane(channelAreaBox);
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -60,21 +69,17 @@ public class LeftPanelSearch {
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         channelListPanel.add(channelTextField, gridBagConstraints);
         JButton addChannel = new JButton("Add");
-        addChannel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String text = channelTextField.getText();
-                getTextFromChannelTextField(text);
-            }
+        addChannel.addActionListener(e -> {
+            String text = channelTextField.getText();
+            getTextFromChannelTextField(text);
         });
         channelListPanel.add(addChannel);
-
         return channelListPanel;
     }
 
     private static void getTextFromChannelTextField(String text) {
         if(text.equals("")){
-            JOptionPane.showMessageDialog(channelSuccessDialog,
+            JOptionPane.showMessageDialog(showErrorMessage,
                     "Channel name cannot be empty");
         }else {
             channelAreaBox.append(text + "\n");
@@ -84,12 +89,15 @@ public class LeftPanelSearch {
         }
     }
 
-    private static JPanel memberListPanel(){
+    private JPanel memberListPanel(){
 
         memberListPanel = new JPanel();
-        memberAreaBox = new JTextArea(17, 22);
-        memberAreaBox.setEditable(false);
-        JScrollPane jScrollPane = new JScrollPane(memberAreaBox);
+
+        listModel = new MemberCustomList<>(members);
+        listPerson.setModel(listModel);
+
+        JScrollPane jScrollPane = new JScrollPane(listPerson);
+        jScrollPane.setPreferredSize(new Dimension(265, 290));
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -97,37 +105,43 @@ public class LeftPanelSearch {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         memberListPanel.add(jScrollPane, gridBagConstraints);
-
-        memberTextField = new JTextField(15);
-        memberTextField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String text = memberTextField.getText();
-                addTextFromMemberTextField(text);
-            }
-        });
-        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        memberListPanel.add(memberTextField, gridBagConstraints);
         JButton addMember = new JButton("Add");
-        memberListPanel.add(addMember);
-        addMember.addActionListener(e -> {
-            String text = memberTextField.getText();
-            addTextFromMemberTextField(text);
-        });
-        return memberListPanel;
+        JButton searchMemeber = new JButton("Search");
 
+        addMember.addActionListener(evt -> addMemberNames());
+
+        searchMemeber.addActionListener(e -> searchPersons());
+        memberListPanel.add(addMember);
+        memberListPanel.add(searchMemeber);
+        return memberListPanel;
     }
 
-    private static void addTextFromMemberTextField(String text) {
-        if(text.equals("")){
-            JOptionPane.showMessageDialog(memberSuccessDialog,
+    private void addMemberNames(){
+        String memberName = JOptionPane.showInputDialog("Enter member name");
+        if (memberName == null) {
+            JOptionPane.showMessageDialog(showErrorMessage,
                     "Member name cannot be empty");
-        }else {
-            memberAreaBox.append(text + "\n");
-            memberTextField.selectAll();
-            memberAreaBox.setCaretPosition(memberAreaBox.getDocument().getLength());
-            memberTextField.setText("");
+        }else{
+            if(memberName.startsWith(" ") || memberName.startsWith("@")){
+                JOptionPane.showMessageDialog(showErrorMessage,
+                        "Member name cannot start with spaces or @");
+            }else{
+                listModel.addElement(new Member(memberName));
+
+            }
+        }
+    }
+
+    private void searchPersons() {
+        String memberName = JOptionPane.showInputDialog("Enter member name to search");
+        if (memberName == null) {
+            return;
+        }
+        int foundIndex = Collections.binarySearch(members, new Member(memberName));
+        if (foundIndex >= 0) {
+            listPerson.setSelectedIndex(foundIndex);
+        } else {
+            JOptionPane.showMessageDialog(showErrorMessage,"Could not find the person " + memberName);
         }
     }
 
