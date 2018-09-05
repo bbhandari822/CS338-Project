@@ -2,18 +2,16 @@ package com.binod.project.swing.components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
-import java.util.ArrayList;
-
-import static com.sun.webkit.graphics.WCImage.getImage;
 
 /**
  * Created by Binod Bhandari on 8/19/18.
  */
 public class ChannelInformationMenu extends JFrame {
+
+    private static JFrame messageDialog;
 
     //return the tool bar
     public ChannelInformationMenu() {
@@ -75,9 +73,36 @@ public class ChannelInformationMenu extends JFrame {
         JButton infoButton = new JButton(infoIcon);
         JButton settingButton = new JButton(settingIcon);
 
+        peopleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LeftPanelSearch.returnNameForListModel();
+            }
+        });
+
+        infoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(messageDialog,
+                        "This is the chat application developed by Binod Bhandari\n" +
+                                " for CS338. Start by typing your name. \n" +
+                                "This will enable you to chat with another user who is listening \n" +
+                                "to the same localhost. \n" +
+                                "The left-hand side of application contains custom list where \n" +
+                                "you can add members and different channels name \n" +
+
+                                "Please enter exit to quit."+
+                                "\n" +
+                                "This application is focused for Drexel Student where they can make \n" +
+                                "channels for different classes and add their classmates.");
+            }
+        });
+
         submenu.add(starButton);
         submenu.add(peopleButton);
         submenu.add(thumbButton);
+        submenu.addSeparator(new Dimension(890,1));
+        submenu.add(Box.createHorizontalGlue());
         submenu.add(phoneButton);
         submenu.add(infoButton);
         submenu.add(settingButton);

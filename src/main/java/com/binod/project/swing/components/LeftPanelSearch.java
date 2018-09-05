@@ -1,5 +1,7 @@
 package com.binod.project.swing.components;
 
+import com.binod.project.swing.domain.ChannelBox;
+import com.binod.project.swing.domain.ChannelCustomList;
 import com.binod.project.swing.domain.Member;
 import com.binod.project.swing.domain.MemberCustomList;
 
@@ -7,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,9 +27,16 @@ public class LeftPanelSearch extends Component {
     private static JFrame showErrorMessage;
 
 
-    private MemberCustomList<Member> listModel;
+    private static MemberCustomList<Member> listModel;
+    public static String memberName;
     private JList<Member> listPerson = new JList<>();
     private java.util.List<Member> members = new ArrayList<>();
+
+    private static ChannelCustomList<ChannelBox> channelListModel;
+    public static String channelName;
+    private JList<ChannelBox> listChannel= new JList<>();
+    private java.util.List<ChannelBox> channelsNam = new ArrayList<>();
+
 
     public LeftPanelSearch() {
         memberListPanel().setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -45,13 +55,14 @@ public class LeftPanelSearch extends Component {
     }
 
 
-    private static JPanel channelListPanel(){
+    private JPanel channelListPanel(){
 
         channelListPanel = new JPanel();
-        channelAreaBox = new JTextArea(17, 22);
-        channelAreaBox.setEditable(false);
-        channelAreaBox.setText("Channel 1\n");
-        JScrollPane jScrollPane = new JScrollPane(channelAreaBox);
+        channelListModel = new ChannelCustomList<>(channelsNam);
+        listChannel.setModel(channelListModel);
+
+        JScrollPane jScrollPane = new JScrollPane(listChannel);
+        jScrollPane.setPreferredSize(new Dimension(265, 285));
         jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -82,9 +93,7 @@ public class LeftPanelSearch extends Component {
             JOptionPane.showMessageDialog(showErrorMessage,
                     "Channel name cannot be empty");
         }else {
-            channelAreaBox.append(text + "\n");
-            channelTextField.selectAll();
-            channelAreaBox.setCaretPosition(channelAreaBox.getDocument().getLength());
+            channelListModel.addElement(new ChannelBox(text));
             channelTextField.setText("");
         }
     }
@@ -108,7 +117,7 @@ public class LeftPanelSearch extends Component {
         JButton addMember = new JButton("Add");
         JButton searchMemeber = new JButton("Search");
 
-        addMember.addActionListener(evt -> addMemberNames());
+        addMember.addActionListener(evt -> returnNameForListModel());
 
         searchMemeber.addActionListener(e -> searchPersons());
         memberListPanel.add(addMember);
@@ -116,8 +125,8 @@ public class LeftPanelSearch extends Component {
         return memberListPanel;
     }
 
-    private void addMemberNames(){
-        String memberName = JOptionPane.showInputDialog("Enter member name");
+    public static void returnNameForListModel(){
+        memberName = JOptionPane.showInputDialog("Enter member name");
         if (memberName == null) {
             JOptionPane.showMessageDialog(showErrorMessage,
                     "Member name cannot be empty");
@@ -126,10 +135,14 @@ public class LeftPanelSearch extends Component {
                 JOptionPane.showMessageDialog(showErrorMessage,
                         "Member name cannot start with spaces or @");
             }else{
-                listModel.addElement(new Member(memberName));
+                 addMemberNames(memberName);
 
             }
         }
+    }
+
+    private static void addMemberNames(String memberName){
+        listModel.addElement(new Member(LeftPanelSearch.memberName));
     }
 
     private void searchPersons() {
