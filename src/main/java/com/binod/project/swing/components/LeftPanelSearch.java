@@ -85,6 +85,7 @@ public class LeftPanelSearch extends Component {
             getTextFromChannelTextField(text);
         });
         channelListPanel.add(addChannel);
+        channelListModel.addElement(new ChannelBox("Channel 1"));
         return channelListPanel;
     }
 

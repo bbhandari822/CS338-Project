@@ -1,6 +1,9 @@
 
 -- DROP TABLE cs338.USERDATA
 
+CREATE database cs338;
+use cs338;
+
 CREATE TABLE cs338.USERDATA (
     id int PRIMARY KEY AUTO_INCREMENT,
     username varchar(255),
