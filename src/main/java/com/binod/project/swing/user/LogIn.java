@@ -53,7 +53,7 @@ public class LogIn {
         JPanel loginBox = new JPanel(new GridBagLayout());
         loginBox.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        loginBox.setPreferredSize(new Dimension(400,250));
+        loginBox.setPreferredSize(new Dimension(400,350));
         loginBox.setBackground(Color.WHITE);
 
         JLabel signInLabel = new JLabel("Sign in to your chat room");
@@ -125,6 +125,44 @@ public class LogIn {
         gridBagConstraints.gridx++;
         JButton loginButton = new JButton("Login");
         loginBox.add(loginButton, gridBagConstraints);
+
+        gridBagConstraints.gridy++;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = (int) 0.4;
+        JButton aboutButton = new JButton("About");
+        loginBox.add(aboutButton, gridBagConstraints);
+
+        aboutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(logInSuccessMessageBox,
+                        "<HTML> <b> About <b> \n" +
+                        "\n" +
+                         "<HTML> <b> Project Developed By: <b>" + "Binod Bhandari \n" +
+                         "<HTML> <b> Project Version: <b>" + "1.0.0 \n" +
+                                "\n" +
+                         "1. Enter username and password to log in\n" +
+                        "2. In case username and password is not in database click sign up\n" +
+                        "    Once the data is saved to the database, click login label which will take\n" +
+                        " back to the login page. Enter your credentials.\n" +
+                        "3. Start the Server class\n" +
+                        "4. Loading page will appear and after some time the channel page will open up. \n" +
+                        "    It will fail to open if the server is not on. \"Group Chat Started\" message will appear in the console. \n" +
+                        "5. Enter the name to start the channel, can run multiple instances on same time \n" +
+                        "    to see a real-time message on different instances/thread. \n" +
+                        "    \"Adding this client to active client list Test\" message will appear after entering \n" +
+                        "the name. This will keep updated every time a new user is added. \n" +
+                        "6. The left panel contains the channel and member panel where you can add the member name and \n" +
+                        "    all the channels that you want to create. \n" +
+                        "    Future: This can be updated from some database \n" +
+                        "    (like Drexel classes and students enrolled in the class)\n" +
+                        "7. Enter exit to stop/kill the thread and that thread will stop receiving the message.\n \n"
+                        +
+                                "<HTML> <i> Please refer to README for application setup: <i>" + "1.0.0 \n"
+                );
+
+            }
+        });
 
         loginButton.addActionListener(e -> {
 //            if(usernameTextField.getText().equals("Drexel") && passwordTextField.getText().equals("cs338")){
